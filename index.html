@@ -56,14 +56,14 @@
         <div class="page-title"><div><small>MK CINEMA</small><h1>ليلتك تبدأ هنا</h1><p>اكتشف عوالم سينمائية من مصادر مرخّصة وقانونية.</p></div><span class="page-symbol">▣</span></div>
         <div class="cinema-banner"><div><span class="eyebrow">قريباً في MK</span><h2>مكتبتك السينمائية<br>في عالم واحد.</h2><p>بحث وتصنيفات وقوائم مشاهدة ومتابعة تقدمك.</p></div><div class="film-reel">✦</div></div>
         <div class="cinema-tools"><input id="cinema-search" type="search" placeholder="ابحث عن فيلم أو مسلسل..."><div id="cinema-filters" class="cinema-filters"><button type="button" class="active" data-cinema-filter="all">الكل</button><button type="button" data-cinema-filter="movie">أفلام</button><button type="button" data-cinema-filter="series">مسلسلات</button><button type="button" data-cinema-filter="anime">أنمي</button><button type="button" data-cinema-filter="documentary">وثائقي</button><button type="button" data-cinema-filter="short">قصير</button></div></div><div class="section-head compact"><div><small>اختيارات للانطلاق</small><h2>دليل MK المختار</h2></div><span class="muted">روابط بحث رسمية</span></div><div id="curated-cinema-grid" class="cinema-grid"></div>
-        <div class="section-head"><div><small>مخطط له</small><h2>مكتبة الأفلام</h2></div><span class="muted">المرحلة القادمة</span></div>
+        <div class="section-head"><div><small>مكتبة MK الفعلية</small><h2>شاهد داخل التطبيق</h2></div><span id="cinema-live-count" class="muted">العناوين المرخّصة</span></div><div id="cinema-live-grid" class="cinema-grid"><div class="empty-state"><span>▣</span><b>المكتبة جاهزة لإضافة المحتوى</b><p>العناوين التي يضيفها المالك بمصدر رسمي أو ترخيص واضح ستظهر هنا مع مشغل داخل التطبيق.</p></div></div>
         <div class="catalog-sources"><div class="section-head"><div><small>اكتشف المكتبات المتاحة</small><h2>أفلام ومسلسلات</h2></div></div>
           <a class="catalog-source" href="https://www.justwatch.com/dz" target="_blank" rel="noopener noreferrer"><b>JustWatch الجزائر</b><span>ابحث عن العناوين واعرف المنصة التي تعرضها في بلدك ↗</span></a>
           <a class="catalog-source" href="https://www.netflix.com/dz/" target="_blank" rel="noopener noreferrer"><b>Netflix</b><span>المكتبة الرسمية للأفلام والمسلسلات حسب توفرها ↗</span></a>
           <a class="catalog-source" href="https://www.primevideo.com/" target="_blank" rel="noopener noreferrer"><b>Prime Video</b><span>تصفح المحتوى الرسمي حسب توفره في منطقتك ↗</span></a>
           <a class="catalog-source" href="https://archivewatch.org/" target="_blank" rel="noopener noreferrer"><b>Archive Watch – أفلام مجانية قانونية</b><span>أعمال من الملكية العامة أو مصرح بمشاركتها ↗</span></a>
         </div>
-        <div class="empty-state"><span>▣</span><b>مكتبة MK الخاصة</b><p>ستظهر هنا العناوين التي نملك حق عرضها أو التي أضفتها من مصادر مرخّصة. لا يمكن نسخ مكتبات المنصات المدفوعة أو استضافة أفلامها دون ترخيص.</p></div>
+        
       </section>
       <section class="page" id="page-creators">
         <div class="page-title"><div><small>MK CREATORS</small><h1>عالم اليوتيوبرز</h1><p>شاهد فيديوهات صناع المحتوى من قنواتهم الرسمية على YouTube.</p></div><span class="page-symbol">▶</span></div>
@@ -129,7 +129,7 @@
         <div class="admin-section"><div class="section-head compact"><div><small>MK CINEMA</small><h2>إضافة فيلم أو مسلسل</h2></div></div>
           <form id="admin-film-form" class="admin-form"><input id="film-id" type="hidden">
             <label>العنوان<input id="film-title" required maxlength="180"></label>
-            <label>النوع<select id="film-type"><option value="movie">فيلم</option><option value="series">مسلسل</option><option value="documentary">وثائقي</option><option value="short">فيلم قصير</option></select></label>
+            <label>النوع<select id="film-type"><option value="movie">فيلم</option><option value="series">مسلسل</option><option value="anime">أنمي</option><option value="documentary">وثائقي</option><option value="short">فيلم قصير</option></select></label>
             <label>سنة الإصدار<input id="film-year" type="number" min="1888" max="2200"></label>
             <label>التصنيفات (افصل بينها بفاصلة)<input id="film-genres" placeholder="أكشن، خيال علمي"></label>
             <label>رابط الملصق HTTPS<input id="film-poster" type="url"></label><label>أو ارفع الملصق<input id="film-poster-file" type="file" accept="image/jpeg,image/png,image/webp,image/gif"></label>
@@ -149,6 +149,14 @@
   </main>
   <nav class="mobile-nav" id="mobile-nav"><button class="active" data-page="home">⌂<small>الرئيسية</small></button><button data-page="cinema">▣<small>السينما</small></button>
     <button data-page="creators">▶<small>المبدعون</small></button><button data-page="social">◉<small>المنشورات</small></button><button data-page="chat">▤<small>الدردشة</small></button><button data-page="profile">◎<small>حسابي</small></button><button id="admin-mobile-nav" class="hidden" data-page="admin">🔐<small>الخزانة</small></button></nav>
+  <section id="cinema-player-modal" class="cinema-player-modal hidden" aria-hidden="true" role="dialog" aria-modal="true" aria-label="مشغل MK Cinema">
+    <div class="cinema-player-backdrop" data-close-player></div>
+    <div class="cinema-player-dialog">
+      <div class="cinema-player-head"><div><small>MK CINEMA · PLAYER</small><b id="cinema-player-title">مشغل السينما</b></div><button id="cinema-player-close" type="button" aria-label="إغلاق المشغل">×</button></div>
+      <div id="cinema-player-stage" class="cinema-player-stage"></div>
+      <p id="cinema-player-note" class="cinema-player-note">المشاهدة من مصدر رسمي أو مرخّص.</p>
+    </div>
+  </section>
   <div id="notifications-panel" class="notifications-panel hidden"><div class="notifications-head"><b>الإشعارات</b><button id="notifications-close" type="button">×</button></div><div id="notifications-list"></div></div>
   <section id="auth-modal" class="modal hidden" aria-hidden="true">
     <div class="modal-backdrop" data-close-auth></div>
