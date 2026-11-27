@@ -1,111 +1,70 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#100b10">
-  <meta name="description" content="MK Social — عالمك الرقمي في مكان واحد.">
-  <title>MK Social — YOUR DIGITAL UNIVERSE</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0b090b">
+  <meta name="description" content="MK Universe — عالمك الرقمي، السينما والمجتمع والدردشة في مكان واحد.">
+  <title>MK Universe — Your Digital Universe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
-  <div class="ambient ambient-one"></div>
-  <div class="ambient ambient-two"></div>
+  <div class="glow glow-a"></div><div class="glow glow-b"></div>
   <header class="topbar">
-    <a class="brand" href="#" aria-label="MK Social">
-      <span class="brand-mark">MK</span>
-      <span class="brand-copy"><strong>MK SOCIAL</strong><small>YOUR DIGITAL UNIVERSE</small></span>
-    </a>
-    <div class="topbar-actions">
-      <span id="connection-status" class="connection-status"><i></i> جاري الاتصال</span>
-      <button id="logout-button" class="button button-quiet hidden" type="button">خروج</button>
-    </div>
+    <a class="brand" href="#" aria-label="MK Universe"><span class="brand-mark">MK</span><span><b>MK UNIVERSE</b><small>YOUR DIGITAL UNIVERSE</small></span></a>
+    <div class="top-actions"><span class="demo-pill"><i></i> معاينة أولية</span><button class="avatar" aria-label="الملف الشخصي">MK</button></div>
   </header>
-
-  <main class="page-shell">
-    <section id="auth-view" class="auth-layout">
-      <div class="hero-copy">
-        <span class="eyebrow">مساحتك الرقمية تبدأ هنا</span>
-        <h1>عالمك.<br><span>قصتك.</span> مجتمعك.</h1>
-        <p>تواصل، شارك أفكارك، واكتشف أشخاصاً يشاركونك الاهتمامات.</p>
-        <div class="hero-points"><span>● مجتمع واحد</span><span>● محتوى من اختيارك</span><span>● تحكم في حسابك</span></div>
-      </div>
-      <section class="panel auth-panel">
-        <div class="panel-heading">
-          <span class="mini-mark">MK</span>
-          <div><h2 id="auth-title">مرحباً بعودتك</h2><p id="auth-subtitle">سجّل الدخول للمتابعة إلى عالمك.</p></div>
+  <main class="layout">
+    <aside class="sidebar">
+      <div class="welcome"><small>مرحباً بك في</small><strong>عالمك الرقمي</strong><span>كل اهتماماتك في مكان واحد.</span></div>
+      <nav id="main-nav">
+        <button class="nav-item active" data-page="home"><span>⌂</span> الرئيسية</button>
+        <button class="nav-item" data-page="cinema"><span>▣</span> السينما <em>قريباً</em></button>
+        <button class="nav-item" data-page="social"><span>◉</span> المنشورات</button>
+        <button class="nav-item" data-page="chat"><span>▤</span> الدردشة <em>قريباً</em></button>
+        <button class="nav-item" data-page="profile"><span>◎</span> ملفي الشخصي</button>
+      </nav>
+      <div class="sidebar-bottom"><div class="mini-orbit">✦</div><b>MK Universe</b><small>منصة واحدة. عوالم متعددة.</small></div>
+    </aside>
+    <section class="content">
+      <section class="page active" id="page-home">
+        <div class="hero">
+          <div class="hero-copy"><span class="eyebrow"><i></i> مرحباً بك في عالم جديد</span><h1>كل عالمك.<br><span>في مكان واحد.</span></h1><p>اكتشف أفلاماً، شارك أفكارك، وتواصل مع مجتمعك — كل ذلك داخل MK Universe.</p><div class="hero-buttons"><button class="primary" data-go="social">اكتشف المنشورات <b>←</b></button><button class="secondary" data-go="cinema">استكشف السينما</button></div></div>
+          <div class="hero-art"><div class="planet planet-one"></div><div class="planet planet-two"></div><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="art-logo">MK<span>UNIVERSE</span></div><div class="art-caption">YOUR WORLD<br>YOUR STORY</div></div>
         </div>
-        <form id="auth-form" class="form-stack">
-          <label>البريد الإلكتروني<input id="auth-email" type="email" autocomplete="email" placeholder="name@example.com" required maxlength="254"></label>
-          <label id="name-field" class="hidden">الاسم الظاهر<input id="auth-name" type="text" autocomplete="name" placeholder="كيف يراك الناس؟" maxlength="40"></label>
-          <label>كلمة المرور<input id="auth-password" type="password" autocomplete="current-password" placeholder="8 أحرف على الأقل" minlength="8" required></label>
-          <button id="auth-submit" class="button button-primary" type="submit">تسجيل الدخول</button>
-        </form>
-        <div class="auth-links">
-          <button id="auth-switch" class="text-button" type="button">إنشاء حساب جديد</button>
-          <button id="forgot-button" class="text-button muted" type="button">نسيت كلمة المرور؟</button>
+        <div class="section-head"><div><small>ابدأ الاستكشاف</small><h2>عوالمك داخل MK</h2></div><span class="live-dot">تجربة أولية</span></div>
+        <div class="module-grid">
+          <button class="module-card cinema-card" data-go="cinema"><span class="module-icon">▣</span><small>MK CINEMA</small><b>شاهد واكتشف</b><p>أفلام ومسلسلات ومكتبة مشاهدة.</p><span class="card-arrow">←</span></button>
+          <button class="module-card social-card" data-go="social"><span class="module-icon">◉</span><small>MK SOCIAL</small><b>شارك لحظاتك</b><p>منشورات وصور وفيديوهات وتفاعل.</p><span class="card-arrow">←</span></button>
+          <button class="module-card chat-card" data-go="chat"><span class="module-icon">▤</span><small>MK CHAT</small><b>ابقَ على تواصل</b><p>محادثات خاصة ومجموعات.</p><span class="card-arrow">←</span></button>
         </div>
-        <p class="fine-print">بإنشاء حساب، أنت توافق على استخدام المنصة وفق قواعد المجتمع.</p>
+        <div class="section-head"><div><small>من المجتمع</small><h2>آخر المنشورات</h2></div><button class="text-button" data-go="social">عرض الكل ←</button></div>
+        <div id="home-feed" class="feed-list"></div>
       </section>
-    </section>
-
-    <section id="app-view" class="app-layout hidden">
-      <aside class="sidebar">
-        <section class="panel profile-mini">
-          <div id="profile-avatar" class="avatar avatar-large">M</div>
-          <h2 id="profile-display-name">عضو MK</h2>
-          <p id="profile-username" class="muted">@member</p>
-          <form id="profile-form" class="form-stack compact-form">
-            <label>اسم المستخدم<input id="profile-handle" type="text" minlength="3" maxlength="24" pattern="[A-Za-z0-9_]+" placeholder="username" required></label>
-            <label>نبذة عنك<textarea id="profile-bio" maxlength="160" rows="3" placeholder="اكتب شيئاً عن نفسك..."></textarea></label>
-            <button class="button button-secondary" type="submit">حفظ الملف الشخصي</button>
-          </form>
-          <p class="tiny-note">اسم المستخدم: 3–24 حرفاً إنجليزياً أو رقماً أو _</p>
-        </section>
-        <section class="panel search-panel">
-          <h3>اكتشف المجتمع</h3>
-          <form id="search-form" class="search-form">
-            <input id="search-input" type="search" placeholder="ابحث باسم المستخدم" maxlength="24" aria-label="ابحث باسم المستخدم">
-            <button class="button button-secondary" type="submit">بحث</button>
-          </form>
-          <div id="search-results" class="search-results"><p class="muted small">ابحث عن أعضاء MK.</p></div>
-        </section>
-      </aside>
-
-      <section class="main-column">
-        <section class="welcome-strip">
-          <div><span class="eyebrow">أهلاً بك في MK</span><h1>مساحتك، بصوتك.</h1></div>
-          <span class="welcome-orb">MK</span>
-        </section>
-        <section class="panel composer">
-          <div class="section-title"><div><span class="eyebrow">شارك المجتمع</span><h2>ماذا يدور في بالك؟</h2></div><span class="status-dot">منشور جديد</span></div>
-          <form id="post-form" class="form-stack">
-            <textarea id="post-content" rows="4" maxlength="5000" placeholder="اكتب منشوراً..."></textarea>
-            <div class="composer-footer"><span class="muted small">المنشور النصي متاح في النسخة الأولى.</span><button class="button button-primary" type="submit">نشر الآن <span aria-hidden="true">←</span></button></div>
-          </form>
-        </section>
-        <section class="feed-section">
-          <div class="section-title feed-heading"><div><span class="eyebrow">آخر المشاركات</span><h2>الموجز</h2></div><button id="refresh-feed" class="button button-quiet" type="button">تحديث ↻</button></div>
-          <div id="feed-list" class="feed-list"><div class="panel empty-state">جاري تحميل المنشورات...</div></div>
-        </section>
+      <section class="page" id="page-social">
+        <div class="page-title"><div><small>MK SOCIAL</small><h1>مساحة مجتمعك</h1><p>شارك فكرة أو لحظة مع مجتمع MK.</p></div><span class="page-symbol">◉</span></div>
+        <form id="post-form" class="composer"><div class="composer-top"><div class="avatar large">MK</div><textarea id="post-content" maxlength="500" placeholder="ما الذي يدور في بالك؟" required></textarea></div><div class="composer-bottom"><span>✦ كن إيجابياً وشارك باحترام</span><button class="primary" type="submit">نشر المنشور</button></div></form>
+        <div class="section-head compact"><div><small>اكتشف</small><h2>منشورات المجتمع</h2></div><span class="muted">بيانات تجريبية</span></div><div id="social-feed" class="feed-list"></div>
       </section>
+      <section class="page" id="page-cinema">
+        <div class="page-title"><div><small>MK CINEMA</small><h1>ليلتك تبدأ هنا</h1><p>اكتشف عوالم سينمائية من مصادر مرخّصة وقانونية.</p></div><span class="page-symbol">▣</span></div>
+        <div class="cinema-banner"><div><span class="eyebrow">قريباً في MK</span><h2>مكتبتك السينمائية<br>في عالم واحد.</h2><p>بحث وتصنيفات وقوائم مشاهدة ومتابعة تقدمك.</p></div><div class="film-reel">✦</div></div>
+        <div class="section-head"><div><small>مخطط له</small><h2>مكتبة الأفلام</h2></div><span class="muted">المرحلة القادمة</span></div>
+        <div class="empty-state"><span>▣</span><b>نجهّز لك تجربة سينمائية متكاملة</b><p>سنضيف كتالوجاً ومصادر مشاهدة قانونية بعد تجهيز قاعدة المحتوى وحقوق العرض.</p></div>
+      </section>
+      <section class="page" id="page-chat">
+        <div class="page-title"><div><small>MK CHAT</small><h1>دردشاتك</h1><p>محادثات فردية ومجموعات في مكان واحد.</p></div><span class="page-symbol">▤</span></div>
+        <div class="empty-state tall"><span>▤</span><b>مساحة تواصلك قيد البناء</b><p>سنجهّز الرسائل الخاصة والمجموعات ومشاركة الصور والفيديوهات مع حماية خصوصيتك.</p></div>
+      </section>
+      <section class="page" id="page-profile">
+        <div class="page-title"><div><small>MK ID</small><h1>ملفي الشخصي</h1><p>هويتك الموحدة داخل MK Universe.</p></div><span class="page-symbol">◎</span></div>
+        <div class="profile-card"><div class="avatar profile-avatar">MK</div><div><h2>عضو MK Universe</h2><p>سيظهر اسمك وصورتك ونبذتك هنا بعد إنشاء حساب MK ID.</p><span class="muted">الحساب الموحد قيد التجهيز</span></div></div>
+        <div class="notice"><b>MK ID</b><p>حساب واحد للوصول إلى السينما والمنشورات والدردشة، دون إنشاء حساب منفصل لكل قسم.</p></div>
+      </section>
+      <footer>© 2026 MK UNIVERSE <span>YOUR DIGITAL UNIVERSE</span></footer>
     </section>
   </main>
-
-  <dialog id="password-dialog" class="password-dialog">
-<form id="password-reset-form" class="form-stack">
-<h2>تعيين كلمة مرور جديدة</h2>
-<p class="muted small">اختَر كلمة مرور قوية من 8 أحرف على الأقل.</p>
-<label>كلمة المرور الجديدة<input id="new-password" type="password" minlength="8" autocomplete="new-password" required></label>
-<label>تأكيد كلمة المرور<input id="confirm-password" type="password" minlength="8" autocomplete="new-password" required></label>
-<button class="button button-primary" type="submit">حفظ كلمة المرور</button>
-</form>
-</dialog>
-<div id="toast-region" class="toast-region" role="status" aria-live="polite"></div>
-  <footer class="site-footer"><span>MK SOCIAL</span><span>YOUR DIGITAL UNIVERSE</span><span>نسخة تجريبية أولية</span></footer>
-  <script type="module" src="./app.js?v=3"></script>
-</body>
-</html>
+  <nav class="mobile-nav" id="mobile-nav"><button class="active" data-page="home">⌂<small>الرئيسية</small></button><button data-page="cinema">▣<small>السينما</small></button><button data-page="social">◉<small>المنشورات</small></button><button data-page="chat">▤<small>الدردشة</small></button><button data-page="profile">◎<small>حسابي</small></button></nav>
+  <div id="toast-region" aria-live="polite"></div><script type="module" src="./app.js"></script>
+</body></html>
