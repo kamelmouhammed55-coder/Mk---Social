@@ -298,19 +298,32 @@ function youtubeVideoId(raw){
     return /^[A-Za-z0-9_-]{11}$/.test(id)?id:null;
   }catch{return null}
 }
+const CREATOR_REELS_KEY="mk-universe-creator-reels-v1";
+function readCreatorReels(){try{const items=JSON.parse(localStorage.getItem(CREATOR_REELS_KEY)||"[]");return Array.isArray(items)?items.filter(x=>x&&/^[A-Za-z0-9_-]{11}$/.test(x.id)):[]}catch{return []}}
+function renderCreatorReels(){
+  const host=$("#creator-reels-feed");if(!host)return;
+  const items=readCreatorReels();host.replaceChildren();
+  if(!items.length){const empty=document.createElement("div");empty.className="empty-state";const icon=safeText(document.createElement("span"),"▶");const title=safeText(document.createElement("b"),"قائمة الفيديوهات فارغة");const desc=safeText(document.createElement("p"),"ألصق رابط فيديو يوتيوب بالأعلى ليظهر هنا.");empty.append(icon,title,desc);host.append(empty);return}
+  items.forEach((item,index)=>{
+    const card=document.createElement("article");card.className="reel-card";
+    const frameWrap=document.createElement("div");frameWrap.className="reel-frame";
+    const frame=document.createElement("iframe");frame.src="https://www.youtube-nocookie.com/embed/"+encodeURIComponent(item.id)+"?playsinline=1&rel=0";frame.title=item.title||"فيديو MK";frame.loading=index===0?"eager":"lazy";frame.allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";frame.allowFullscreen=true;frame.referrerPolicy="strict-origin-when-cross-origin";frameWrap.append(frame);
+    const overlay=document.createElement("div");overlay.className="reel-overlay";
+    const details=document.createElement("div");details.className="reel-details";const label=safeText(document.createElement("b"),item.title||"فيديو من YouTube");const sub=safeText(document.createElement("small"),"MK CREATORS · تشغيل داخل التطبيق");details.append(label,sub);
+    const actions=document.createElement("div");actions.className="reel-actions";
+    const source=document.createElement("a");source.href="https://www.youtube.com/watch?v="+encodeURIComponent(item.id);source.target="_blank";source.rel="noopener noreferrer";source.textContent="المصدر ↗";
+    const remove=document.createElement("button");remove.type="button";remove.textContent="إزالة";remove.addEventListener("click",()=>{const next=readCreatorReels().filter(x=>x.id!==item.id);localStorage.setItem(CREATOR_REELS_KEY,JSON.stringify(next));renderCreatorReels();toast("تمت إزالة الفيديو من قائمتك.")});
+    actions.append(source,remove);overlay.append(details,actions);card.append(frameWrap,overlay);host.append(card);
+  });
+}
 $("#creator-video-form").addEventListener("submit",event=>{
-  event.preventDefault();
-  const id=youtubeVideoId($("#creator-video-url").value.trim());
-  const host=$("#creator-video-player");
-  host.innerHTML="";
+  event.preventDefault();const raw=$("#creator-video-url").value.trim();const id=youtubeVideoId(raw);
   if(!id){toast("الرابط غير صالح. استعمل رابط فيديو يوتيوب مباشر.","error");return}
-  const frame=document.createElement("iframe");
-  frame.src="https://www.youtube-nocookie.com/embed/"+encodeURIComponent(id);
-  frame.title="فيديو من YouTube";frame.loading="lazy";
-  frame.allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
-  frame.allowFullscreen=true;frame.referrerPolicy="strict-origin-when-cross-origin";
-  host.append(frame);
+  const items=readCreatorReels();if(items.some(x=>x.id===id)){toast("هذا الفيديو موجود بالفعل في قائمتك.","error");return}
+  items.unshift({id,title:"فيديو من YouTube",addedAt:Date.now()});localStorage.setItem(CREATOR_REELS_KEY,JSON.stringify(items.slice(0,30)));
+  $("#creator-video-url").value="";renderCreatorReels();toast("تمت إضافة الفيديو. شغّله مباشرة من MK Reels.");
 });
+renderCreatorReels();
 $("#creator-search-form").addEventListener("submit",event=>{
   event.preventDefault();
   const query=$("#creator-search").value.trim();
