@@ -8,7 +8,8 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
 
 const $ = (s, root=document) => root.querySelector(s);
 const $$ = (s, root=document) => [...root.querySelectorAll(s)];
-const state = { user:null, profile:null, isOwner:false, authMode:"signup", busy:false, chatId:null, chatChannel:null, notificationChannel:null, posts:[] };\nlet searchDelay;
+const state = { user:null, profile:null, isOwner:false, authMode:"signup", busy:false, chatId:null, chatChannel:null, notificationChannel:null, posts:[] };
+let searchDelay;
 
 function toast(message,type="success"){
   const el=document.createElement("div");el.className="toast "+type;el.textContent=message;
@@ -59,7 +60,8 @@ async function loadProfile(user){
 function updateAccountUI(){
   const button=$("#auth-button"),logout=$("#logout-button");
   $("#admin-nav").classList.toggle("hidden",!state.isOwner);
-  $("#admin-mobile-nav").classList.toggle("hidden",!state.isOwner);\n  $("#notifications-button").classList.toggle("hidden",!state.user);
+  $("#admin-mobile-nav").classList.toggle("hidden",!state.isOwner);
+  $("#notifications-button").classList.toggle("hidden",!state.user);
   if(state.user){
     button.textContent=state.isOwner?"مالك MK":(state.profile?.display_name||state.user.email?.split("@")[0]||"حسابي");
     button.classList.add("hidden");logout.classList.remove("hidden");
@@ -515,4 +517,5 @@ function renderPostsPlaceholder(){
   $("#home-feed").innerHTML='<div class="empty-state"><span>◉</span><b>اكتشف مجتمع MK</b><p>المنشورات العامة ستظهر هنا.</p></div>';
   $("#social-feed").innerHTML='<div class="empty-state"><span>◉</span><b>ابدأ أول منشور في مجتمع MK</b><p>سجل الدخول وشارك أفكارك وصورك وفيديوهاتك.</p></div>';
 }
-await loadSocialFeed();await loadCinema();\nif(state.user)await loadChatList();
+await loadSocialFeed();await loadCinema();
+if(state.user)await loadChatList();
