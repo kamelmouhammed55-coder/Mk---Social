@@ -346,7 +346,13 @@ async function loadAdminUsers(){
         await loadAdminDashboard();
       }catch(error){toast(error.message||"تعذر تنفيذ الإجراء.","error")}
     });
-    actions.append(button);row.append(info,actions);host.append(row);
+    const del=document.createElement("button");del.className="small-action danger";del.textContent="حذف الحساب";
+    del.addEventListener("click",async()=>{
+      if(prompt("هذا الإجراء نهائي ويحذف الحساب ومحتواه. اكتب DELETE للتأكيد:")!=="DELETE")return;
+      try{await callOwnerAction("delete",{user_id:user.user_id});toast("تم حذف الحساب.");await loadAdminDashboard()}
+      catch(error){toast(error.message||"تعذر حذف الحساب.","error")}
+    });
+    actions.append(button,del);row.append(info,actions);host.append(row);
   });
 }
 async function loadAdminReports(){
@@ -416,4 +422,4 @@ function renderPostsPlaceholder(){
   $("#home-feed").innerHTML='<div class="empty-state"><span>◉</span><b>سجل الدخول لاكتشاف منشورات المجتمع</b><p>المنشورات الحقيقية ستظهر هنا عند توفرها.</p></div>';
   $("#social-feed").innerHTML='<div class="empty-state"><span>◉</span><b>ابدأ أول منشور في مجتمع MK</b><p>سجل الدخول وشارك أفكارك وصورك وفيديوهاتك.</p></div>';
 }
-if(state.user){await loadSocialFeed();await loadCinema()}
+await loadSocialFeed();await loadCinema();\nif(state.user)await loadChatList();
