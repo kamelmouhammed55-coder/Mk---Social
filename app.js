@@ -8,7 +8,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
 
 const $ = (s, root=document) => root.querySelector(s);
 const $$ = (s, root=document) => [...root.querySelectorAll(s)];
-const state = { user:null, profile:null, isOwner:false, busy:false, authMode:"signin", chatId:null, chatChannel:null, notificationChannel:null, posts:[] };
+const state = { user:null, profile:null, isOwner:false, busy:false, authMode:"signin", chatId:null, chatChannel:null, notificationChannel:null, posts:[], cinemaFilter:"all", cinemaSearch:"" };
 let searchDelay;
 
 function toast(message,type="success"){
@@ -315,7 +315,7 @@ $("#creator-search-form").addEventListener("submit",event=>{
   event.preventDefault();
   const query=$("#creator-search").value.trim();
   if(!query)return;
-  window.open("https://www.youtube.com/results?search_query="+encodeURIComponent(query)," _blank","noopener,noreferrer");
+  window.open("https://www.youtube.com/results?search_query="+encodeURIComponent(query),"_blank","noopener,noreferrer");
 });
 async function loadCinema(){
   const host=$("#page-cinema");if(!host)return;
@@ -324,24 +324,37 @@ async function loadCinema(){
   const existing=$("#cinema-live-grid");if(existing)existing.remove();
   const empty=host.querySelector(".empty-state");
   const section=host.querySelector(".section-head");
+  const tools=host.querySelector(".cinema-tools");
+  const filtered=(films||[]).filter(film=>(state.cinemaFilter==="all"||film.content_type===state.cinemaFilter)&&((film.title+" "+(film.description||"")+" "+(film.genres||[]).join(" ")).toLowerCase().includes(state.cinemaSearch)));
   if(!films?.length){
+    if(tools)tools.classList.add("hidden");
     if(empty)empty.classList.remove("hidden");
     if(section){const label=section.querySelector("small");const heading=section.querySelector("h2");const status=section.querySelector(".muted");if(label)label.textContent="مخطط له";if(heading)heading.textContent="مكتبة الأفلام";if(status)status.textContent="المرحلة القادمة"}
     return;
   }
   if(empty)empty.classList.add("hidden");
-  if(section){const label=section.querySelector("small");const heading=section.querySelector("h2");const status=section.querySelector(".muted");if(label)label.textContent="المكتبة";if(heading)heading.textContent="الأفلام والمسلسلات";if(status)status.textContent=films.length+" عنوان"}
+  if(tools)tools.classList.remove("hidden");
+  if(section){const label=section.querySelector("small");const heading=section.querySelector("h2");const status=section.querySelector(".muted");if(label)label.textContent="المكتبة";if(heading)heading.textContent="الأفلام والمسلسلات";if(status)status.textContent=filtered.length+" عنوان"}
   const grid=document.createElement("div");grid.id="cinema-live-grid";grid.className="cinema-grid";
-  films.forEach(film=>{
+  filtered.forEach(film=>{
     const card=document.createElement("article");card.className="cinema-card-live";
     if(film.poster_url){const img=document.createElement("img");img.loading="lazy";img.alt=film.title;img.src=film.poster_url;card.append(img)}
     const info=document.createElement("div");info.className="film-info";const title=safeText(document.createElement("b"),film.title);
     const desc=safeText(document.createElement("p"),[film.release_year,film.content_type,film.genres?.join("، ")].filter(Boolean).join(" · ")+"\n"+(film.description||""));
     const link=document.createElement("a");link.href=film.watch_url;link.target="_blank";link.rel="noopener noreferrer";link.textContent="المشاهدة من المصدر الرسمي ↗";
-    info.append(title,desc,link);card.append(info);grid.append(card);
+    info.append(title,desc);
+    if(film.trailer_url){const trailer=document.createElement("a");trailer.href=film.trailer_url;trailer.target="_blank";trailer.rel="noopener noreferrer";trailer.textContent="الإعلان ↗";trailer.style.marginInlineStart="12px";info.append(trailer)}
+    info.append(link);card.append(info);grid.append(card);
   });
   section.after(grid);
 }
+$("#cinema-search").addEventListener("input",event=>{state.cinemaSearch=event.target.value.trim().toLowerCase();loadCinema()});
+$("#cinema-filters").addEventListener("click",event=>{
+  const button=event.target.closest("[data-cinema-filter]");if(!button)return;
+  state.cinemaFilter=button.dataset.cinemaFilter;
+  $("#cinema-filters button").forEach(item=>item.classList.toggle("active",item===button));
+  loadCinema();
+});
 
 async function loadChatList(){
   if(!state.user)return;
