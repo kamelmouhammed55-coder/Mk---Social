@@ -381,7 +381,9 @@ async function loadAdminUsers(){
   const {data,error}=await supabase.rpc("admin_list_users",{p_search:search||null,p_limit:100});
   const host=$("#admin-users");host.innerHTML="";if(error){host.textContent=error.message;return}
   if(!data?.length){host.textContent="لا يوجد أعضاء مطابقون.";return}
-  data.forEach(user=>{
+  const {data:profiles}=await supabase.from("profiles").select("id,username,bio").in("id",data.map(x=>x.user_id));
+  const profileMap=new Map((profiles||[]).map(p=>[p.id,p]));
+  data.forEach(user=>{user.username=profileMap.get(user.user_id)?.username||"";user.bio=profileMap.get(user.user_id)?.bio||"";
     const row=document.createElement("div");row.className="admin-row";const info=document.createElement("div");
     const name=safeText(document.createElement("b"),user.display_name||user.email||user.user_id);
     const detail=safeText(document.createElement("small"),user.email+" · "+formatDate(user.created_at));info.append(name,detail);
