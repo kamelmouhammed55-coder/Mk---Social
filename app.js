@@ -31,9 +31,11 @@ $$("[data-go]").forEach(btn=>btn.addEventListener("click",()=>navigate(btn.datas
 
 function openAuth(){
   state.otpStep=false;state.pendingOtpEmail="";
-  $("#auth-heading").textContent="الدخول إلى MK Universe";
-  $("#auth-description").textContent="اكتب بريدك الإلكتروني ونرسل لك رمزاً من 6 أرقام.";
-  $("#auth-email").disabled=false;$("#auth-email").value="";
+  $("#auth-heading").textContent="انضم إلى MK Social";
+  $("#auth-description").textContent="أنشئ حسابك وابدأ رحلتك.";
+  $("#auth-email").disabled=false;$("#auth-email").value="kame9865yyy@gmail.com";
+  $("#auth-display-name").disabled=false;$("#auth-display-name").value="";
+  $("#display-name-wrap").classList.remove("hidden");
   $("#auth-otp").value="";$("#otp-wrap").classList.add("hidden");
   $("#change-email").classList.add("hidden");
   $("#auth-submit").textContent="إرسال الرمز";
@@ -111,7 +113,7 @@ $("#auth-form").addEventListener("submit",async event=>{
       const {error}=await supabase.auth.signInWithOtp({email,options:{shouldCreateUser:true,data:displayName?{display_name:displayName}:{}}});
       if(error)throw error;
       state.pendingOtpEmail=email;state.otpStep=true;
-      $("#auth-email").disabled=true;$("#otp-wrap").classList.remove("hidden");
+      $("#auth-email").disabled=true;$("#auth-display-name").disabled=true;$("#otp-wrap").classList.remove("hidden");
       $("#change-email").classList.remove("hidden");
       $("#auth-description").textContent="أرسلنا رمزاً من 6 أرقام إلى "+email+". أدخله لإكمال الدخول.";
       $("#auth-submit").textContent="تأكيد الرمز";
@@ -136,7 +138,7 @@ $("#auth-form").addEventListener("submit",async event=>{
 });
 $("#change-email").addEventListener("click",()=>{
   state.otpStep=false;state.pendingOtpEmail="";
-  $("#auth-email").disabled=false;$("#auth-otp").value="";
+  $("#auth-email").disabled=false;$("#auth-display-name").disabled=false;$("#auth-otp").value="";
   $("#otp-wrap").classList.add("hidden");$("#change-email").classList.add("hidden");
   $("#auth-description").textContent="اكتب بريدك الإلكتروني ونرسل لك رمزاً من 6 أرقام.";
   $("#auth-submit").textContent="إرسال الرمز";
