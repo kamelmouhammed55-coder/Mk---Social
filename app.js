@@ -303,13 +303,13 @@ function readCreatorReels(){try{const items=JSON.parse(localStorage.getItem(CREA
 function renderCreatorReels(){
   const host=$("#creator-reels-feed");if(!host)return;
   const items=readCreatorReels();host.replaceChildren();
-  if(!items.length){const empty=document.createElement("div");empty.className="empty-state";const icon=safeText(document.createElement("span"),"▶");const title=safeText(document.createElement("b"),"قائمة الفيديوهات فارغة");const desc=safeText(document.createElement("p"),"ألصق رابط فيديو يوتيوب بالأعلى ليظهر هنا.");empty.append(icon,title,desc);host.append(empty);return}
+  if(!items.length){const empty=document.createElement("div");empty.className="empty-state";const icon=safeText(document.createElement("span"),"▶");const title=safeText(document.createElement("b"),"أضف أول فيديو إلى MK Reels");const desc=safeText(document.createElement("p"),"ألصق رابط فيديو من قناة رسمية أو فيديو تملك إذن عرضه، وسيعمل هنا داخل التطبيق.");empty.append(icon,title,desc);host.append(empty);return}
   items.forEach((item,index)=>{
     const card=document.createElement("article");card.className="reel-card";
     const frameWrap=document.createElement("div");frameWrap.className="reel-frame";
-    const frame=document.createElement("iframe");frame.src="https://www.youtube-nocookie.com/embed/"+encodeURIComponent(item.id)+"?playsinline=1&rel=0";frame.title=item.title||"فيديو MK";frame.loading=index===0?"eager":"lazy";frame.allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";frame.allowFullscreen=true;frame.referrerPolicy="strict-origin-when-cross-origin";frameWrap.append(frame);
+    const frame=document.createElement("iframe");frame.src="https://www.youtube-nocookie.com/embed/"+encodeURIComponent(item.id)+"?playsinline=1&rel=0&modestbranding=1";frame.title=item.title||"فيديو MK";frame.loading=index===0?"eager":"lazy";frame.allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";frame.allowFullscreen=true;frame.referrerPolicy="strict-origin-when-cross-origin";frameWrap.append(frame);
     const overlay=document.createElement("div");overlay.className="reel-overlay";
-    const details=document.createElement("div");details.className="reel-details";const label=safeText(document.createElement("b"),item.title||"فيديو من YouTube");const sub=safeText(document.createElement("small"),"MK CREATORS · تشغيل داخل التطبيق");details.append(label,sub);
+    const details=document.createElement("div");details.className="reel-details";const label=safeText(document.createElement("b"),item.title||"فيديو من YouTube");const sub=safeText(document.createElement("small"),"MK REELS · تشغيل داخل MK");details.append(label,sub);
     const actions=document.createElement("div");actions.className="reel-actions";
     const source=document.createElement("a");source.href="https://www.youtube.com/watch?v="+encodeURIComponent(item.id);source.target="_blank";source.rel="noopener noreferrer";source.textContent="المصدر ↗";
     const remove=document.createElement("button");remove.type="button";remove.textContent="إزالة";remove.addEventListener("click",()=>{const next=readCreatorReels().filter(x=>x.id!==item.id);localStorage.setItem(CREATOR_REELS_KEY,JSON.stringify(next));renderCreatorReels();toast("تمت إزالة الفيديو من قائمتك.")});
@@ -345,45 +345,66 @@ function renderCuratedCinema(){
   items.forEach(item=>{
     const card=document.createElement("article");card.className="cinema-card-live curated-card";
     const info=document.createElement("div");info.className="film-info";
-    const title=safeText(document.createElement("b"),item.title);
-    const meta=safeText(document.createElement("small"),item.kind+" · دليل اكتشاف");
+    info.append(safeText(document.createElement("b"),item.title),safeText(document.createElement("small"),item.kind+" · دليل اكتشاف"));
     const links=document.createElement("div");links.className="curated-links";
-    const watch=document.createElement("a");watch.href="https://www.justwatch.com/dz/search?q="+encodeURIComponent(item.title);watch.target="_blank";watch.rel="noopener noreferrer";watch.textContent="اعرف أين تشاهده ↗";
-    const trailer=document.createElement("a");trailer.href="https://www.youtube.com/results?search_query="+encodeURIComponent(item.title+" official trailer");trailer.target="_blank";trailer.rel="noopener noreferrer";trailer.textContent="التريلر الرسمي ↗";
-    links.append(watch,trailer);info.append(title,meta,links);card.append(info);host.append(card);
+    const watch=document.createElement("a");watch.href="https://www.justwatch.com/dz/search?q="+encodeURIComponent(item.title);watch.target="_blank";watch.rel="noopener noreferrer";watch.textContent="منصات المشاهدة الرسمية ↗";
+    const trailer=document.createElement("a");trailer.href="https://www.youtube.com/results?search_query="+encodeURIComponent(item.title+" official trailer");trailer.target="_blank";trailer.rel="noopener noreferrer";trailer.textContent="الإعلان الرسمي ↗";
+    links.append(watch,trailer);info.append(links);card.append(info);host.append(card);
   });
 }
+function youtubeVideoId(raw){
+  try{const u=new URL(raw);if(!["youtube.com","www.youtube.com","m.youtube.com","youtu.be","www.youtu.be","youtube-nocookie.com","www.youtube-nocookie.com"].includes(u.hostname))return null;let id="";if(u.hostname.includes("youtu.be"))id=u.pathname.split("/").filter(Boolean)[0]||"";else if(u.pathname==="/watch")id=u.searchParams.get("v")||"";else if(u.pathname.startsWith("/embed/")||u.pathname.startsWith("/shorts/"))id=u.pathname.split("/")[2]||"";return /^[A-Za-z0-9_-]{11}$/.test(id)?id:null}catch{return null}
+}
+function openCinemaPlayer(raw,title){
+  const modal=$("#cinema-player-modal"),stage=$("#cinema-player-stage"),note=$("#cinema-player-note");
+  if(!modal||!stage)return;
+  stage.replaceChildren();$("#cinema-player-title").textContent=title||"مشغل MK Cinema";
+  let url;try{url=new URL(raw)}catch{toast("رابط المشاهدة غير صالح.","error");return}
+  if(url.protocol!=="https:"){toast("المشغل يقبل روابط HTTPS فقط.","error");return}
+  const yt=youtubeVideoId(url.href);
+  if(yt){
+    const frame=document.createElement("iframe");frame.src="https://www.youtube-nocookie.com/embed/"+encodeURIComponent(yt)+"?autoplay=1&playsinline=1&rel=0";frame.title=title||"MK Cinema";frame.allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";frame.allowFullscreen=true;frame.referrerPolicy="strict-origin-when-cross-origin";stage.append(frame);note.textContent="الفيديو يعمل من YouTube داخل مشغل MK.";
+  }else if(url.hostname==="player.vimeo.com"||url.hostname==="www.youtube-nocookie.com"){
+    const frame=document.createElement("iframe");frame.src=url.href;frame.title=title||"MK Cinema";frame.allow="autoplay; fullscreen; picture-in-picture";frame.allowFullscreen=true;stage.append(frame);note.textContent="المشاهدة داخل MK من المصدر الأصلي.";
+  }else if(/\.(mp4|webm|ogg|m3u8)(?:$|\?)/i.test(url.pathname+url.search)){
+    const video=document.createElement("video");video.controls=true;video.playsInline=true;video.preload="metadata";video.src=url.href;stage.append(video);note.textContent="ملف فيديو مباشر من مصدر العرض المرخّص.";
+    const play=video.play();if(play&&typeof play.catch==="function")play.catch(()=>{});
+  }else{
+    const message=document.createElement("div");message.className="player-external-message";message.textContent="هذا المصدر يمنع التضمين داخل التطبيقات. افتحه من المنصة الرسمية لمتابعة المشاهدة.";stage.append(message);
+    const link=document.createElement("a");link.href=url.href;link.target="_blank";link.rel="noopener noreferrer";link.className="primary player-source-link";link.textContent="فتح المصدر الرسمي";stage.append(link);note.textContent="بعض المنصات مثل خدمات الاشتراك تمنع تشغيل الفيديو داخل مشغلات خارجية.";
+  }
+  modal.classList.remove("hidden");modal.setAttribute("aria-hidden","false");document.body.classList.add("player-open");
+}
+function closeCinemaPlayer(){
+  const modal=$("#cinema-player-modal");if(!modal)return;
+  modal.classList.add("hidden");modal.setAttribute("aria-hidden","true");$("#cinema-player-stage").replaceChildren();document.body.classList.remove("player-open");
+}
+$("#cinema-player-close")?.addEventListener("click",closeCinemaPlayer);
+$$("[data-close-player]").forEach(el=>el.addEventListener("click",closeCinemaPlayer));
+document.addEventListener("keydown",event=>{if(event.key==="Escape")closeCinemaPlayer()});
 async function loadCinema(){
   const host=$("#page-cinema");if(!host)return;
   renderCuratedCinema();
+  const grid=$("#cinema-live-grid");if(!grid)return;
   const {data:films,error}=await supabase.from("cinema_catalog").select("id,title,description,content_type,release_year,genres,poster_url,trailer_url,watch_url,source_name,rights_basis,published").eq("published",true).order("created_at",{ascending:false}).limit(100);
-  if(error){console.error("Cinema:",error.message);return}
-  const existing=$("#cinema-live-grid");if(existing)existing.remove();
-  const empty=host.querySelector(".empty-state");
-  const section=host.querySelector(".section-head");
-  const tools=host.querySelector(".cinema-tools");
+  if(error){console.error("Cinema:",error.message);grid.innerHTML='<div class="empty-state"><b>تعذر تحميل المكتبة الآن</b><p>تحقق من الاتصال ثم أعد المحاولة.</p></div>';return}
   const filtered=(films||[]).filter(film=>(state.cinemaFilter==="all"||film.content_type===state.cinemaFilter)&&((film.title+" "+(film.description||"")+" "+(film.genres||[]).join(" ")).toLowerCase().includes(state.cinemaSearch)));
-  if(!films?.length){
-    if(tools)tools.classList.remove("hidden");
-    if(empty)empty.classList.remove("hidden");
-    if(section){const label=section.querySelector("small");const heading=section.querySelector("h2");const status=section.querySelector(".muted");if(label)label.textContent="مخطط له";if(heading)heading.textContent="مكتبة الأفلام";if(status)status.textContent="المرحلة القادمة"}
-    return;
-  }
-  if(empty)empty.classList.add("hidden");
-  if(tools)tools.classList.remove("hidden");
-  if(section){const label=section.querySelector("small");const heading=section.querySelector("h2");const status=section.querySelector(".muted");if(label)label.textContent="المكتبة";if(heading)heading.textContent="الأفلام والمسلسلات";if(status)status.textContent=filtered.length+" عنوان"}
-  const grid=document.createElement("div");grid.id="cinema-live-grid";grid.className="cinema-grid";
+  grid.replaceChildren();
+  const count=$("#cinema-live-count");if(count)count.textContent=filtered.length+" عنوان متاح";
+  if(!filtered.length){const empty=document.createElement("div");empty.className="empty-state";const icon=safeText(document.createElement("span"),"▣");const title=safeText(document.createElement("b"),"لا توجد عناوين منشورة في هذا التصنيف بعد");const desc=safeText(document.createElement("p"),"المحتوى الذي يضيفه المالك بمصدر رسمي أو ترخيص عرض سيظهر هنا، مع تشغيل داخل التطبيق عندما يسمح المصدر.");empty.append(icon,title,desc);grid.append(empty);return}
   filtered.forEach(film=>{
-    const card=document.createElement("article");card.className="cinema-card-live";
+    const card=document.createElement("article");card.className="cinema-card-live cinema-live-item";
     if(film.poster_url){const img=document.createElement("img");img.loading="lazy";img.alt=film.title;img.src=film.poster_url;card.append(img)}
-    const info=document.createElement("div");info.className="film-info";const title=safeText(document.createElement("b"),film.title);
-    const desc=safeText(document.createElement("p"),[film.release_year,film.content_type,film.genres?.join("، ")].filter(Boolean).join(" · ")+"\n"+(film.description||""));
-    const link=document.createElement("a");link.href=film.watch_url;link.target="_blank";link.rel="noopener noreferrer";link.textContent="المشاهدة من المصدر الرسمي ↗";
-    info.append(title,desc);
-    if(film.trailer_url){const trailer=document.createElement("a");trailer.href=film.trailer_url;trailer.target="_blank";trailer.rel="noopener noreferrer";trailer.textContent="الإعلان ↗";trailer.style.marginInlineStart="12px";info.append(trailer)}
-    info.append(link);card.append(info);grid.append(card);
+    const info=document.createElement("div");info.className="film-info";
+    info.append(safeText(document.createElement("b"),film.title));
+    const desc=safeText(document.createElement("p"),[film.release_year,film.content_type,film.genres?.join("، ")].filter(Boolean).join(" · ")+"\n"+(film.description||""));info.append(desc);
+    const meta=safeText(document.createElement("small"),(film.source_name||"مصدر رسمي")+" · "+(film.rights_basis||""));meta.className="status-pill";info.append(meta);
+    const actions=document.createElement("div");actions.className="cinema-card-actions";
+    const watch=document.createElement("button");watch.type="button";watch.className="primary";watch.textContent="▶ شاهد داخل MK";watch.addEventListener("click",()=>openCinemaPlayer(film.watch_url,film.title));
+    actions.append(watch);
+    if(film.trailer_url){const trailer=document.createElement("button");trailer.type="button";trailer.className="secondary";trailer.textContent="الإعلان";trailer.addEventListener("click",()=>openCinemaPlayer(film.trailer_url,"إعلان · "+film.title));actions.append(trailer)}
+    info.append(actions);card.append(info);grid.append(card);
   });
-  section.after(grid);
 }
 $("#cinema-search").addEventListener("input",event=>{state.cinemaSearch=event.target.value.trim().toLowerCase();loadCinema()});
 $("#cinema-filters").addEventListener("click",event=>{
