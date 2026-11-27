@@ -24,6 +24,7 @@
         <button class="nav-item" data-page="social"><span>◉</span> المنشورات</button>
         <button class="nav-item" data-page="chat"><span>▤</span> الدردشة <em>قريباً</em></button>
         <button class="nav-item" data-page="profile"><span>◎</span> ملفي الشخصي</button>
+        <button id="admin-nav" class="nav-item hidden" data-page="admin"><span>⚙</span> إدارة المنصة</button>
       </nav>
       <div class="sidebar-bottom"><div class="mini-orbit">✦</div><b>MK Universe</b><small>منصة واحدة. عوالم متعددة.</small></div>
     </aside>
@@ -44,7 +45,7 @@
       </section>
       <section class="page" id="page-social">
         <div class="page-title"><div><small>MK SOCIAL</small><h1>مساحة مجتمعك</h1><p>شارك فكرة أو لحظة مع مجتمع MK.</p></div><span class="page-symbol">◉</span></div>
-        <form id="post-form" class="composer"><div class="composer-top"><div class="avatar large">MK</div><textarea id="post-content" maxlength="500" placeholder="ما الذي يدور في بالك؟" required></textarea></div><div class="composer-bottom"><span>✦ كن إيجابياً وشارك باحترام</span><button class="primary" type="submit">نشر المنشور</button></div></form>
+        <form id="post-form" class="composer"><div class="composer-top"><div class="avatar large">MK</div><textarea id="post-content" maxlength="500" placeholder="ما الذي يدور في بالك؟" required></textarea></div><div class="composer-bottom"><label class="file-pick">＋ صورة / فيديو<input id="post-media" type="file" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm"></label><span>✦ كن إيجابياً وشارك باحترام</span><button class="primary" type="submit">نشر المنشور</button></div></form>
         <div class="section-head compact"><div><small>اكتشف</small><h2>منشورات المجتمع</h2></div><span class="muted">بيانات تجريبية</span></div><div id="social-feed" class="feed-list"></div>
       </section>
       <section class="page" id="page-cinema">
@@ -55,17 +56,39 @@
       </section>
       <section class="page" id="page-chat">
         <div class="page-title"><div><small>MK CHAT</small><h1>دردشاتك</h1><p>محادثات فردية ومجموعات في مكان واحد.</p></div><span class="page-symbol">▤</span></div>
-        <div class="empty-state tall"><span>▤</span><b>مساحة تواصلك قيد البناء</b><p>سنجهّز الرسائل الخاصة والمجموعات ومشاركة الصور والفيديوهات مع حماية خصوصيتك.</p></div>
+        <div class="chat-layout"><aside class="chat-people"><label class="search-label">ابحث عن عضو<input id="chat-user-search" type="search" placeholder="الاسم أو اسم المستخدم"></label><div id="chat-user-results" class="chat-results"></div><div class="section-head compact"><div><small>رسائلك</small><h2>المحادثات</h2></div></div><div id="chat-list" class="chat-results"></div></aside><section id="chat-panel" class="chat-panel"><div class="empty-state tall"><span>▤</span><b>اختر محادثة أو ابحث عن عضو</b><p>رسائلك الخاصة لا يراها إلا المشاركون فيها.</p></div></section></div>
       </section>
       <section class="page" id="page-profile">
         <div class="page-title"><div><small>MK ID</small><h1>ملفي الشخصي</h1><p>هويتك الموحدة داخل MK Universe.</p></div><span class="page-symbol">◎</span></div>
         <div class="profile-card"><div class="avatar profile-avatar">MK</div><div><h2>عضو MK Universe</h2><p>سيظهر اسمك وصورتك ونبذتك هنا بعد إنشاء حساب MK ID.</p><span class="muted">الحساب الموحد قيد التجهيز</span></div></div>
-        <div class="notice"><b>MK ID</b><p>حساب واحد للوصول إلى السينما والمنشورات والدردشة، دون إنشاء حساب منفصل لكل قسم.</p></div>
+        <form id="profile-form" class="profile-edit"><h3>تعديل الملف الشخصي</h3><label>الاسم الظاهر<input id="profile-name" maxlength="40" placeholder="اسمك"></label><label>اسم المستخدم<input id="profile-username" maxlength="24" placeholder="username"></label><label>نبذة عنك<textarea id="profile-bio" maxlength="160" rows="3" placeholder="اكتب نبذة قصيرة"></textarea></label><button class="primary" type="submit">حفظ التغييرات</button></form><div class="notice"><b>MK ID</b><p>حساب واحد للوصول إلى السينما والمنشورات والدردشة، دون إنشاء حساب منفصل لكل قسم.</p></div>
       </section>
-      <footer>© 2026 MK UNIVERSE <span>YOUR DIGITAL UNIVERSE</span></footer>
+      <section class="page" id="page-admin">
+        <div class="page-title"><div><small>MK AUDIENCE · OWNER CONSOLE</small><h1>إدارة المنصة</h1><p>لوحة المالك — الأدوات الإدارية محمية على مستوى قاعدة البيانات والخادم.</p></div><span class="page-symbol">⚙</span></div>
+        <div id="admin-stats" class="admin-stats"></div>
+        <div class="admin-section"><div class="section-head compact"><div><small>المستخدمون</small><h2>إدارة الأعضاء والحظر</h2></div><button id="refresh-users" class="text-button">تحديث</button></div><input id="admin-user-search" class="admin-search" type="search" placeholder="ابحث بالبريد أو الاسم أو اسم المستخدم"><div id="admin-users" class="admin-list"></div></div>
+        <div class="admin-section"><div class="section-head compact"><div><small>المراجعة والإشراف</small><h2>البلاغات</h2></div><button id="refresh-reports" class="text-button">تحديث</button></div><div id="admin-reports" class="admin-list"></div></div>
+        <div class="admin-section"><div class="section-head compact"><div><small>MK CINEMA</small><h2>إضافة فيلم أو مسلسل</h2></div></div>
+          <form id="admin-film-form" class="admin-form">
+            <label>العنوان<input id="film-title" required maxlength="180"></label>
+            <label>النوع<select id="film-type"><option value="movie">فيلم</option><option value="series">مسلسل</option><option value="documentary">وثائقي</option><option value="short">فيلم قصير</option></select></label>
+            <label>سنة الإصدار<input id="film-year" type="number" min="1888" max="2200"></label>
+            <label>التصنيفات (افصل بينها بفاصلة)<input id="film-genres" placeholder="أكشن، خيال علمي"></label>
+            <label>رابط الملصق HTTPS<input id="film-poster" type="url"></label>
+            <label>رابط الإعلان HTTPS<input id="film-trailer" type="url"></label>
+            <label class="wide">رابط المشاهدة الرسمي أو المرخّص HTTPS<input id="film-watch" type="url" required></label>
+            <label>اسم المصدر<input id="film-source" required placeholder="القناة أو صاحب الحقوق"></label>
+            <label>أساس الحقوق<select id="film-rights"><option value="official_source">مصدر رسمي</option><option value="licensed">مرخّص للعرض</option><option value="public_domain">ملك عام موثّق</option></select></label>
+            <label class="wide">الوصف<textarea id="film-description" rows="3" maxlength="5000"></textarea></label>
+            <label class="check-label"><input id="film-published" type="checkbox"> نشر للجميع فوراً</label>
+            <button class="primary" type="submit">حفظ في مكتبة السينما</button>
+          </form><div id="admin-films" class="admin-list"></div>
+        </div>
+        <div class="admin-section"><div class="section-head compact"><div><small>سجل الإدارة</small><h2>آخر العمليات</h2></div><button id="refresh-audit" class="text-button">تحديث</button></div><div id="admin-audit" class="admin-list"></div></div>
+      </section>\n      <footer>© 2026 MK UNIVERSE <span>YOUR DIGITAL UNIVERSE</span></footer>
     </section>
   </main>
-  <nav class="mobile-nav" id="mobile-nav"><button class="active" data-page="home">⌂<small>الرئيسية</small></button><button data-page="cinema">▣<small>السينما</small></button><button data-page="social">◉<small>المنشورات</small></button><button data-page="chat">▤<small>الدردشة</small></button><button data-page="profile">◎<small>حسابي</small></button></nav>
+  <nav class="mobile-nav" id="mobile-nav"><button class="active" data-page="home">⌂<small>الرئيسية</small></button><button data-page="cinema">▣<small>السينما</small></button><button data-page="social">◉<small>المنشورات</small></button><button data-page="chat">▤<small>الدردشة</small></button><button data-page="profile">◎<small>حسابي</small></button><button id="admin-mobile-nav" class="hidden" data-page="admin">⚙<small>الإدارة</small></button></nav>
   <section id="auth-modal" class="modal hidden" aria-hidden="true">
     <div class="modal-backdrop" data-close-auth></div>
     <div class="auth-dialog" role="dialog" aria-modal="true" aria-labelledby="auth-heading">
