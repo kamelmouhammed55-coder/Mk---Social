@@ -8,7 +8,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
 
 const $ = (s, root=document) => root.querySelector(s);
 const $$ = (s, root=document) => [...root.querySelectorAll(s)];
-const state = { user:null, profile:null, isOwner:false, authMode:"signup", busy:false, chatId:null, chatChannel:null, posts:[] };
+const state = { user:null, profile:null, isOwner:false, authMode:"signup", busy:false, chatId:null, chatChannel:null, notificationChannel:null, posts:[] };
 
 function toast(message,type="success"){
   const el=document.createElement("div");el.className="toast "+type;el.textContent=message;
@@ -50,7 +50,7 @@ async function loadProfile(user){
 function updateAccountUI(){
   const button=$("#auth-button"),logout=$("#logout-button");
   $("#admin-nav").classList.toggle("hidden",!state.isOwner);
-  $("#admin-mobile-nav").classList.toggle("hidden",!state.isOwner);
+  $("#admin-mobile-nav").classList.toggle("hidden",!state.isOwner);\n  $("#notifications-button").classList.toggle("hidden",!state.user);
   if(state.user){
     button.textContent=state.isOwner?"مالك MK":(state.profile?.display_name||state.user.email?.split("@")[0]||"حسابي");
     button.classList.add("hidden");logout.classList.remove("hidden");
@@ -115,7 +115,7 @@ supabase.auth.onAuthStateChange((event,session)=>{
   if(event==="PASSWORD_RECOVERY"){
     setTimeout(async()=>{const next=window.prompt("أدخل كلمة المرور الجديدة (8 أحرف على الأقل):");if(next&&next.length>=8){const {error}=await supabase.auth.updateUser({password:next});toast(error?error.message:"تم تحديث كلمة المرور.",error?"error":"success")}else if(next)toast("كلمة المرور يجب أن تتكون من 8 أحرف على الأقل.","error")},0);return;
   }
-  if(event==="SIGNED_OUT"){state.user=null;state.profile=null;state.isOwner=false;updateAccountUI();return}
+  if(event==="SIGNED_OUT"){state.user=null;state.profile=null;state.isOwner=false;if(state.notificationChannel){supabase.removeChannel(state.notificationChannel);state.notificationChannel=null}updateAccountUI();return}
   if(session?.user)setTimeout(()=>refreshIdentity(session.user),0);
 });
 
@@ -175,7 +175,7 @@ async function loadSocialFeed(){
   if(state.user&&posts?.length){const {data:likes}=await supabase.from("likes").select("post_id").eq("user_id",state.user.id).in("post_id",posts.map(p=>p.id));likedIds=new Set((likes||[]).map(x=>x.post_id))}
   for(const host of hosts){
     host.innerHTML="";
-    if(!posts?.length){const empty=document.createElement("div");empty.className="empty-state";safeText(document.createElement("b"),"لا توجد منشورات بعد");empty.append(document.createElement("span"));host.append(empty);continue}
+    if(!posts?.length){const empty=document.createElement("div");empty.className="empty-state";const icon=document.createElement("span");icon.textContent="◉";const title=safeText(document.createElement("b"),"لا توجد منشورات بعد");const desc=safeText(document.createElement("p"),"كن أول من يشارك فكرة أو صورة في مجتمع MK.");empty.append(icon,title,desc);host.append(empty);continue}
     posts.forEach(post=>host.append(renderPostCard(post,likedIds.has(post.id))));
   }
 }
@@ -212,6 +212,37 @@ $("#profile-form").addEventListener("submit",async event=>{
   if(error){toast(error.message,"error");return}state.profile=await loadProfile(state.user);updateAccountUI();toast("تم حفظ ملفك الشخصي.");
 });
 
+async function loadNotifications(){
+  if(!state.user)return;
+  const {data,error}=await supabase.from("notifications").select("id,kind,actor_id,post_id,conversation_id,is_read,created_at").eq("recipient_id",state.user.id).order("created_at",{ascending:false}).limit(30);
+  if(error){console.error("Notifications:",error.message);return}
+  const host=$("#notifications-list");host.innerHTML="";
+  const unread=(data||[]).filter(n=>!n.is_read).length;
+  $("#notification-count").textContent=String(unread);$("#notification-count").classList.toggle("hidden",unread===0);
+  if(!data?.length){const empty=document.createElement("div");empty.className="notifications-empty";empty.textContent="لا توجد إشعارات حالياً.";host.append(empty);return}
+  const labels={like:"أعجب أحدهم بمنشورك",comment:"علّق أحدهم على منشورك",follow:"بدأ أحدهم بمتابعتك",message:"وصلتك رسالة جديدة"};
+  data.forEach(item=>{
+    const button=document.createElement("button");button.className="notification-item"+(item.is_read?"":" unread");button.type="button";
+    const label=document.createElement("b");label.textContent=labels[item.kind]||"إشعار جديد";
+    const date=document.createElement("small");date.textContent=formatDate(item.created_at);button.append(label,date);
+    button.addEventListener("click",async()=>{
+      await supabase.from("notifications").update({is_read:true}).eq("id",item.id);
+      $("#notifications-panel").classList.add("hidden");loadNotifications();
+      if(item.kind==="message"&&item.conversation_id){await loadChatList();await openChat(item.conversation_id,"محادثة")}
+      else if(item.post_id)navigate("social");else navigate("profile");
+    });
+    host.append(button);
+  });
+}
+function startNotifications(){
+  if(!state.user)return;
+  loadNotifications();
+  if(state.notificationChannel)supabase.removeChannel(state.notificationChannel);
+  state.notificationChannel=supabase.channel("mk-notifications-"+state.user.id)
+    .on("postgres_changes",{event:"INSERT",schema:"public",table:"notifications",filter:"recipient_id=eq."+state.user.id},()=>loadNotifications()).subscribe();
+}
+$("#notifications-button").addEventListener("click",()=>{$("#notifications-panel").classList.toggle("hidden");if(!$("#notifications-panel").classList.contains("hidden"))loadNotifications()});
+$("#notifications-close").addEventListener("click",()=>$("#notifications-panel").classList.add("hidden"));
 async function loadCinema(){
   const host=$("#page-cinema");if(!host)return;
   const {data:films,error}=await supabase.from("cinema_catalog").select("id,title,description,content_type,release_year,genres,poster_url,trailer_url,watch_url,source_name,rights_basis,published").eq("published",true).order("created_at",{ascending:false}).limit(100);
@@ -419,7 +450,7 @@ if(initial.data.session?.user){await refreshIdentity(initial.data.session.user);
 renderPostsPlaceholder();
 function renderPostsPlaceholder(){
   // The feed is populated from Supabase after authentication; no fake user content is inserted.
-  $("#home-feed").innerHTML='<div class="empty-state"><span>◉</span><b>سجل الدخول لاكتشاف منشورات المجتمع</b><p>المنشورات الحقيقية ستظهر هنا عند توفرها.</p></div>';
+  $("#home-feed").innerHTML='<div class="empty-state"><span>◉</span><b>اكتشف مجتمع MK</b><p>المنشورات العامة ستظهر هنا.</p></div>';
   $("#social-feed").innerHTML='<div class="empty-state"><span>◉</span><b>ابدأ أول منشور في مجتمع MK</b><p>سجل الدخول وشارك أفكارك وصورك وفيديوهاتك.</p></div>';
 }
 await loadSocialFeed();await loadCinema();\nif(state.user)await loadChatList();
