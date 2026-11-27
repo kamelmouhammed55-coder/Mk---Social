@@ -287,6 +287,36 @@ function startNotifications(){
 }
 $("#notifications-button").addEventListener("click",()=>{$("#notifications-panel").classList.toggle("hidden");if(!$("#notifications-panel").classList.contains("hidden"))loadNotifications()});
 $("#notifications-close").addEventListener("click",()=>$("#notifications-panel").classList.add("hidden"));
+function youtubeVideoId(raw){
+  try{
+    const url=new URL(raw);
+    if(!["youtube.com","www.youtube.com","m.youtube.com","youtu.be","www.youtu.be","youtube-nocookie.com","www.youtube-nocookie.com"].includes(url.hostname))return null;
+    let id="";
+    if(url.hostname.includes("youtu.be"))id=url.pathname.split("/").filter(Boolean)[0]||"";
+    else if(url.pathname==="/watch")id=url.searchParams.get("v")||"";
+    else if(url.pathname.startsWith("/embed/")||url.pathname.startsWith("/shorts/"))id=url.pathname.split("/")[2]||"";
+    return /^[A-Za-z0-9_-]{11}$/.test(id)?id:null;
+  }catch{return null}
+}
+$("#creator-video-form").addEventListener("submit",event=>{
+  event.preventDefault();
+  const id=youtubeVideoId($("#creator-video-url").value.trim());
+  const host=$("#creator-video-player");
+  host.innerHTML="";
+  if(!id){toast("الرابط غير صالح. استعمل رابط فيديو يوتيوب مباشر.","error");return}
+  const frame=document.createElement("iframe");
+  frame.src="https://www.youtube-nocookie.com/embed/"+encodeURIComponent(id);
+  frame.title="فيديو من YouTube";frame.loading="lazy";
+  frame.allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+  frame.allowFullscreen=true;frame.referrerPolicy="strict-origin-when-cross-origin";
+  host.append(frame);
+});
+$("#creator-search-form").addEventListener("submit",event=>{
+  event.preventDefault();
+  const query=$("#creator-search").value.trim();
+  if(!query)return;
+  window.open("https://www.youtube.com/results?search_query="+encodeURIComponent(query)," _blank","noopener,noreferrer");
+});
 async function loadCinema(){
   const host=$("#page-cinema");if(!host)return;
   const {data:films,error}=await supabase.from("cinema_catalog").select("id,title,description,content_type,release_year,genres,poster_url,trailer_url,watch_url,source_name,rights_basis,published").eq("published",true).order("created_at",{ascending:false}).limit(100);
