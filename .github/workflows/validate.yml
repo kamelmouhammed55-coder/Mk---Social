@@ -1,7 +1,7 @@
-name: Validate MK Social
+name: Validate MK Universe
 on:
   push:
-    branches: [main]
+    branches: [main, mk-universe-rebuild]
   pull_request:
     branches: [main]
 jobs:
@@ -10,4 +10,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Check JavaScript syntax
-        run: node --check app.js
+        run: npm run check

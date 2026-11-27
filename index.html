@@ -1,111 +1,167 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#100b10">
-  <meta name="description" content="MK Social — عالمك الرقمي في مكان واحد.">
-  <title>MK Social — YOUR DIGITAL UNIVERSE</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0b090b">
+  <meta name="description" content="MK Universe — عالمك الرقمي، السينما والمجتمع والدردشة في مكان واحد.">
+  <title>MK Universe — Your Digital Universe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
-  <div class="ambient ambient-one"></div>
-  <div class="ambient ambient-two"></div>
+  <div class="glow glow-a"></div><div class="glow glow-b"></div>
   <header class="topbar">
-    <a class="brand" href="#" aria-label="MK Social">
-      <span class="brand-mark">MK</span>
-      <span class="brand-copy"><strong>MK SOCIAL</strong><small>YOUR DIGITAL UNIVERSE</small></span>
-    </a>
-    <div class="topbar-actions">
-      <span id="connection-status" class="connection-status"><i></i> جاري الاتصال</span>
-      <button id="logout-button" class="button button-quiet hidden" type="button">خروج</button>
-    </div>
+    <a class="brand" href="#" aria-label="MK Universe"><span class="brand-mark">MK</span><span><b>MK UNIVERSE</b><small>YOUR DIGITAL UNIVERSE</small></span></a>
+    <div class="top-actions"><span class="demo-pill"><i></i> معاينة أولية</span><button id="notifications-button" class="icon-action hidden" type="button" aria-label="الإشعارات">♧<span id="notification-count" class="notification-count hidden">0</span></button><button id="auth-button" class="auth-open">دخول / إنشاء حساب</button><button id="logout-button" class="auth-open hidden">خروج</button></div>
   </header>
-
-  <main class="page-shell">
-    <section id="auth-view" class="auth-layout">
-      <div class="hero-copy">
-        <span class="eyebrow">مساحتك الرقمية تبدأ هنا</span>
-        <h1>عالمك.<br><span>قصتك.</span> مجتمعك.</h1>
-        <p>تواصل، شارك أفكارك، واكتشف أشخاصاً يشاركونك الاهتمامات.</p>
-        <div class="hero-points"><span>● مجتمع واحد</span><span>● محتوى من اختيارك</span><span>● تحكم في حسابك</span></div>
-      </div>
-      <section class="panel auth-panel">
-        <div class="panel-heading">
-          <span class="mini-mark">MK</span>
-          <div><h2 id="auth-title">مرحباً بعودتك</h2><p id="auth-subtitle">سجّل الدخول للمتابعة إلى عالمك.</p></div>
+  <main class="layout">
+    <aside class="sidebar">
+      <div class="welcome"><small>مرحباً بك في</small><strong>عالمك الرقمي</strong><span>كل اهتماماتك في مكان واحد.</span></div>
+      <nav id="main-nav">
+        <button class="nav-item active" data-page="home"><span>⌂</span> الرئيسية</button>
+        <button class="nav-item" data-page="cinema"><span>▣</span> السينما</button>
+        <button class="nav-item" data-page="creators"><span>▶</span> فيديوهات اليوتيوبرز</button>
+        <button class="nav-item" data-page="social"><span>◉</span> المنشورات</button>
+        <button class="nav-item" data-page="chat"><span>▤</span> الدردشة <em>قريباً</em></button>
+        <button class="nav-item" data-page="profile"><span>◎</span> ملفي الشخصي</button>
+        <button id="admin-nav" class="nav-item hidden" data-page="admin"><span>⚙</span> إدارة المنصة</button>
+      </nav>
+      <div class="sidebar-bottom"><div class="mini-orbit">✦</div><b>MK Universe</b><small>منصة واحدة. عوالم متعددة.</small></div>
+    </aside>
+    <section class="content">
+      <section class="page active" id="page-home">
+        <div class="hero">
+          <div class="hero-copy"><span class="eyebrow"><i></i> مرحباً بك في عالم جديد</span><h1>كل عالمك.<br><span>في مكان واحد.</span></h1><p>اكتشف أفلاماً، شارك أفكارك، وتواصل مع مجتمعك — كل ذلك داخل MK Universe.</p><div class="hero-buttons"><button class="primary" data-go="social">اكتشف المنشورات <b>←</b></button><button class="secondary" data-go="cinema">استكشف السينما</button></div></div>
+          <div class="hero-art"><div class="planet planet-one"></div><div class="planet planet-two"></div><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="art-logo">MK<span>UNIVERSE</span></div><div class="art-caption">YOUR WORLD<br>YOUR STORY</div></div>
         </div>
-        <form id="auth-form" class="form-stack">
-          <label>البريد الإلكتروني<input id="auth-email" type="email" autocomplete="email" placeholder="name@example.com" required maxlength="254"></label>
-          <label id="name-field" class="hidden">الاسم الظاهر<input id="auth-name" type="text" autocomplete="name" placeholder="كيف يراك الناس؟" maxlength="40"></label>
-          <label>كلمة المرور<input id="auth-password" type="password" autocomplete="current-password" placeholder="8 أحرف على الأقل" minlength="8" required></label>
-          <button id="auth-submit" class="button button-primary" type="submit">تسجيل الدخول</button>
-        </form>
-        <div class="auth-links">
-          <button id="auth-switch" class="text-button" type="button">إنشاء حساب جديد</button>
-          <button id="forgot-button" class="text-button muted" type="button">نسيت كلمة المرور؟</button>
+        <div class="section-head"><div><small>ابدأ الاستكشاف</small><h2>عوالمك داخل MK</h2></div><span class="live-dot">تجربة أولية</span></div>
+        <div class="module-grid">
+          <button class="module-card cinema-card" data-go="cinema"><span class="module-icon">▣</span><small>MK CINEMA</small><b>شاهد واكتشف</b><p>أفلام ومسلسلات ومكتبة مشاهدة.</p><span class="card-arrow">←</span></button>
+          <button class="module-card creators-card" data-go="creators"><span class="module-icon">▶</span><small>MK CREATORS</small><b>شاهد صناع المحتوى</b><p>فيديوهات من قنوات يوتيوب الرسمية.</p><span class="card-arrow">←</span></button>
+          <button class="module-card social-card" data-go="social"><span class="module-icon">◉</span><small>MK SOCIAL</small><b>شارك لحظاتك</b><p>منشورات وصور وفيديوهات وتفاعل.</p><span class="card-arrow">←</span></button>
+          <button class="module-card chat-card" data-go="chat"><span class="module-icon">▤</span><small>MK CHAT</small><b>ابقَ على تواصل</b><p>محادثات خاصة ومجموعات.</p><span class="card-arrow">←</span></button>
         </div>
-        <p class="fine-print">بإنشاء حساب، أنت توافق على استخدام المنصة وفق قواعد المجتمع.</p>
+        <div class="section-head"><div><small>من المجتمع</small><h2>آخر المنشورات</h2></div><button class="text-button" data-go="social">عرض الكل ←</button></div>
+        <div id="home-feed" class="feed-list"></div>
       </section>
-    </section>
-
-    <section id="app-view" class="app-layout hidden">
-      <aside class="sidebar">
-        <section class="panel profile-mini">
-          <div id="profile-avatar" class="avatar avatar-large">M</div>
-          <h2 id="profile-display-name">عضو MK</h2>
-          <p id="profile-username" class="muted">@member</p>
-          <form id="profile-form" class="form-stack compact-form">
-            <label>اسم المستخدم<input id="profile-handle" type="text" minlength="3" maxlength="24" pattern="[A-Za-z0-9_]+" placeholder="username" required></label>
-            <label>نبذة عنك<textarea id="profile-bio" maxlength="160" rows="3" placeholder="اكتب شيئاً عن نفسك..."></textarea></label>
-            <button class="button button-secondary" type="submit">حفظ الملف الشخصي</button>
-          </form>
-          <p class="tiny-note">اسم المستخدم: 3–24 حرفاً إنجليزياً أو رقماً أو _</p>
-        </section>
-        <section class="panel search-panel">
-          <h3>اكتشف المجتمع</h3>
-          <form id="search-form" class="search-form">
-            <input id="search-input" type="search" placeholder="ابحث باسم المستخدم" maxlength="24" aria-label="ابحث باسم المستخدم">
-            <button class="button button-secondary" type="submit">بحث</button>
-          </form>
-          <div id="search-results" class="search-results"><p class="muted small">ابحث عن أعضاء MK.</p></div>
-        </section>
-      </aside>
-
-      <section class="main-column">
-        <section class="welcome-strip">
-          <div><span class="eyebrow">أهلاً بك في MK</span><h1>مساحتك، بصوتك.</h1></div>
-          <span class="welcome-orb">MK</span>
-        </section>
-        <section class="panel composer">
-          <div class="section-title"><div><span class="eyebrow">شارك المجتمع</span><h2>ماذا يدور في بالك؟</h2></div><span class="status-dot">منشور جديد</span></div>
-          <form id="post-form" class="form-stack">
-            <textarea id="post-content" rows="4" maxlength="5000" placeholder="اكتب منشوراً..."></textarea>
-            <div class="composer-footer"><span class="muted small">المنشور النصي متاح في النسخة الأولى.</span><button class="button button-primary" type="submit">نشر الآن <span aria-hidden="true">←</span></button></div>
-          </form>
-        </section>
-        <section class="feed-section">
-          <div class="section-title feed-heading"><div><span class="eyebrow">آخر المشاركات</span><h2>الموجز</h2></div><button id="refresh-feed" class="button button-quiet" type="button">تحديث ↻</button></div>
-          <div id="feed-list" class="feed-list"><div class="panel empty-state">جاري تحميل المنشورات...</div></div>
-        </section>
+      <section class="page" id="page-social">
+        <div class="page-title"><div><small>MK SOCIAL</small><h1>مساحة مجتمعك</h1><p>شارك فكرة أو لحظة مع مجتمع MK.</p></div><span class="page-symbol">◉</span></div>
+        <form id="post-form" class="composer"><div class="composer-top"><div class="avatar large">MK</div><textarea id="post-content" maxlength="500" placeholder="ما الذي يدور في بالك؟"></textarea></div><div class="composer-bottom"><label class="file-pick">＋ صورة / فيديو<input id="post-media" type="file" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm"></label><span>✦ كن إيجابياً وشارك باحترام</span><button class="primary" type="submit">نشر المنشور</button></div></form>
+        <div class="section-head compact"><div><small>اكتشف</small><h2>منشورات المجتمع</h2></div><span class="muted">بيانات تجريبية</span></div><div id="social-feed" class="feed-list"></div>
       </section>
+      <section class="page" id="page-cinema">
+        <div class="page-title"><div><small>MK CINEMA</small><h1>ليلتك تبدأ هنا</h1><p>اكتشف عوالم سينمائية من مصادر مرخّصة وقانونية.</p></div><span class="page-symbol">▣</span></div>
+        <div class="cinema-banner"><div><span class="eyebrow">قريباً في MK</span><h2>مكتبتك السينمائية<br>في عالم واحد.</h2><p>بحث وتصنيفات وقوائم مشاهدة ومتابعة تقدمك.</p></div><div class="film-reel">✦</div></div>
+        <div class="cinema-tools"><input id="cinema-search" type="search" placeholder="ابحث عن فيلم أو مسلسل..."><div id="cinema-filters" class="cinema-filters"><button type="button" class="active" data-cinema-filter="all">الكل</button><button type="button" data-cinema-filter="movie">أفلام</button><button type="button" data-cinema-filter="series">مسلسلات</button><button type="button" data-cinema-filter="anime">أنمي</button><button type="button" data-cinema-filter="documentary">وثائقي</button><button type="button" data-cinema-filter="short">قصير</button></div></div><div class="section-head compact"><div><small>اختيارات للانطلاق</small><h2>دليل MK المختار</h2></div><span class="muted">روابط بحث رسمية</span></div><div id="curated-cinema-grid" class="cinema-grid"></div>
+        <div class="section-head"><div><small>مخطط له</small><h2>مكتبة الأفلام</h2></div><span class="muted">المرحلة القادمة</span></div>
+        <div class="catalog-sources"><div class="section-head"><div><small>اكتشف المكتبات المتاحة</small><h2>أفلام ومسلسلات</h2></div></div>
+          <a class="catalog-source" href="https://www.justwatch.com/dz" target="_blank" rel="noopener noreferrer"><b>JustWatch الجزائر</b><span>ابحث عن العناوين واعرف المنصة التي تعرضها في بلدك ↗</span></a>
+          <a class="catalog-source" href="https://www.netflix.com/dz/" target="_blank" rel="noopener noreferrer"><b>Netflix</b><span>المكتبة الرسمية للأفلام والمسلسلات حسب توفرها ↗</span></a>
+          <a class="catalog-source" href="https://www.primevideo.com/" target="_blank" rel="noopener noreferrer"><b>Prime Video</b><span>تصفح المحتوى الرسمي حسب توفره في منطقتك ↗</span></a>
+          <a class="catalog-source" href="https://archivewatch.org/" target="_blank" rel="noopener noreferrer"><b>Archive Watch – أفلام مجانية قانونية</b><span>أعمال من الملكية العامة أو مصرح بمشاركتها ↗</span></a>
+        </div>
+        <div class="empty-state"><span>▣</span><b>مكتبة MK الخاصة</b><p>ستظهر هنا العناوين التي نملك حق عرضها أو التي أضفتها من مصادر مرخّصة. لا يمكن نسخ مكتبات المنصات المدفوعة أو استضافة أفلامها دون ترخيص.</p></div>
+      </section>
+      <section class="page" id="page-creators">
+        <div class="page-title"><div><small>MK CREATORS</small><h1>عالم اليوتيوبرز</h1><p>شاهد فيديوهات صناع المحتوى من قنواتهم الرسمية على YouTube.</p></div><span class="page-symbol">▶</span></div>
+        <div class="creator-banner"><div><span class="eyebrow">شاهد من المصدر الأصلي</span><h2>صنّاع المحتوى<br>في مكان واحد.</h2><p>الفيديو يبقى مستضافاً على يوتيوب، مع احترام حقوق صاحبه.</p></div><span class="creator-play">▶</span></div>
+        <form id="creator-video-form" class="creator-form"><label>رابط فيديو يوتيوب<input id="creator-video-url" type="url" inputmode="url" placeholder="https://www.youtube.com/watch?v=..." required></label><button class="primary" type="submit">شاهد الفيديو</button></form>
+        <div id="creator-video-player" class="creator-player"><div class="empty-state"><span>▶</span><b>اختَر فيديو لمشاهدته</b><p>ألصق رابط فيديو من يوتيوب لعرضه هنا.</p></div></div>
+        <div class="section-head"><div><small>قنوات جزائرية</small><h2>صنّاع محتوى من الجزائر 🇩🇿</h2></div></div>
+        <div class="creator-grid">
+          <a class="creator-channel" href="https://www.youtube.com/@oumwalidcuisine" target="_blank" rel="noopener noreferrer"><b>Oum Walid</b><small>طبخ ووصفات</small><span>افتح القناة ↗</span></a>
+          <a class="creator-channel" href="https://www.youtube.com/@didinecanon16.officiel" target="_blank" rel="noopener noreferrer"><b>Didine Canon 16</b><small>موسيقى</small><span>افتح القناة ↗</span></a>
+          <a class="creator-channel" href="https://www.youtube.com/@djalilpalermo" target="_blank" rel="noopener noreferrer"><b>DJALIL PALERMO</b><small>موسيقى</small><span>افتح القناة ↗</span></a>
+          <a class="creator-channel" href="https://www.youtube.com/@hichem_smati" target="_blank" rel="noopener noreferrer"><b>Hichem Smati</b><small>موسيقى</small><span>افتح القناة ↗</span></a>
+          <a class="creator-channel" href="https://www.youtube.com/@faycelsghirofficiel" target="_blank" rel="noopener noreferrer"><b>Faycel Sghir</b><small>موسيقى</small><span>افتح القناة ↗</span></a>
+          <a class="creator-channel" href="https://www.youtube.com/@hamianiphysique" target="_blank" rel="noopener noreferrer"><b>الأستاذ حمياني</b><small>تعليم وفيزياء</small><span>افتح القناة ↗</span></a>
+          <a class="creator-channel" href="https://www.youtube.com/@editionavm" target="_blank" rel="noopener noreferrer"><b>AVM ÉDITION</b><small>موسيقى وإنتاج</small><span>افتح القناة ↗</span></a>
+          <a class="creator-channel" href="https://www.youtube.com/@izlamofficiall" target="_blank" rel="noopener noreferrer"><b>iZlam Official</b><small>ترفيه ومحتوى</small><span>افتح القناة ↗</span></a>
+        </div>
+        <div class="section-head"><div><small>قنوات عالمية</small><h2>مشاهير العالم 🌍</h2></div></div>
+        <div class="creator-grid">
+          <a class="creator-channel" href="https://www.youtube.com/@MrBeast" target="_blank" rel="noopener noreferrer"><b>MrBeast</b><small>تحديات وترفيه</small><span>افتح القناة ↗</span></a>
+          <a class="creator-channel" href="https://www.youtube.com/@StokesTwins" target="_blank" rel="noopener noreferrer"><b>Stokes Twins</b><small>كوميديا وتحديات</small><span>افتح القناة ↗</span></a>
+          <a class="creator-channel" href="https://www.youtube.com/@MarkRober" target="_blank" rel="noopener noreferrer"><b>Mark Rober</b><small>علوم وتجارب</small><span>افتح القناة ↗</span></a>
+          <a class="creator-channel" href="https://www.youtube.com/@PewDiePie" target="_blank" rel="noopener noreferrer"><b>PewDiePie</b><small>ترفيه وألعاب</small><span>افتح القناة ↗</span></a>
+          <a class="creator-channel" href="https://www.youtube.com/@DudePerfect" target="_blank" rel="noopener noreferrer"><b>Dude Perfect</b><small>رياضة وتحديات</small><span>افتح القناة ↗</span></a>
+          <a class="creator-channel" href="https://www.youtube.com/@Cristiano" target="_blank" rel="noopener noreferrer"><b>UR · Cristiano</b><small>رياضة وحياة</small><span>افتح القناة ↗</span></a>
+        </div>
+        <div class="section-head"><div><small>قنوات إضافية</small><h2>عرب وعالميون 🌐</h2></div></div>
+        <div class="creator-grid">
+          <a class="creator-channel" href="https://www.youtube.com/@AboFlah" target="_blank" rel="noopener noreferrer"><b>AboFlah</b><small>ألعاب وترفيه</small><span>افتح القناة ↗</span></a>
+          <a class="creator-channel" href="https://www.youtube.com/@BanderitaX" target="_blank" rel="noopener noreferrer"><b>BanderitaX</b><small>ألعاب وكوميديا</small><span>افتح القناة ↗</span></a>
+          <a class="creator-channel" href="https://www.youtube.com/@JoeHattab" target="_blank" rel="noopener noreferrer"><b>Joe Hattab</b><small>سفر ووثائقيات</small><span>افتح القناة ↗</span></a>
+          <a class="creator-channel" href="https://www.youtube.com/@NoorStars" target="_blank" rel="noopener noreferrer"><b>Noor Stars</b><small>ترفيه ولايف ستايل</small><span>افتح القناة ↗</span></a>
+          <a class="creator-channel" href="https://www.youtube.com/@AnasalaFamily" target="_blank" rel="noopener noreferrer"><b>Anasala Family</b><small>عائلة وترفيه</small><span>افتح القناة ↗</span></a>
+          <a class="creator-channel" href="https://www.youtube.com/@MKBHD" target="_blank" rel="noopener noreferrer"><b>Marques Brownlee</b><small>تقنية ومراجعات</small><span>افتح القناة ↗</span></a>
+          <a class="creator-channel" href="https://www.youtube.com/@Veritasium" target="_blank" rel="noopener noreferrer"><b>Veritasium</b><small>علوم وتجارب</small><span>افتح القناة ↗</span></a>
+          <a class="creator-channel" href="https://www.youtube.com/@kurzgesagt" target="_blank" rel="noopener noreferrer"><b>Kurzgesagt</b><small>علوم ورسوم تعليمية</small><span>افتح القناة ↗</span></a>
+          <a class="creator-channel" href="https://www.youtube.com/@TED-Ed" target="_blank" rel="noopener noreferrer"><b>TED-Ed</b><small>تعليم وأفكار</small><span>افتح القناة ↗</span></a>
+          <a class="creator-channel" href="https://www.youtube.com/@RyanTrahan" target="_blank" rel="noopener noreferrer"><b>Ryan Trahan</b><small>تحديات ومغامرات</small><span>افتح القناة ↗</span></a>
+          <a class="creator-channel" href="https://www.youtube.com/@IShowSpeed" target="_blank" rel="noopener noreferrer"><b>IShowSpeed</b><small>بثوث وترفيه</small><span>افتح القناة ↗</span></a>
+          <a class="creator-channel" href="https://www.youtube.com/@Sidemen" target="_blank" rel="noopener noreferrer"><b>Sidemen</b><small>تحديات وترفيه</small><span>افتح القناة ↗</span></a>
+          <a class="creator-channel" href="https://www.youtube.com/@ZachKing" target="_blank" rel="noopener noreferrer"><b>Zach King</b><small>خدع بصرية وإبداع</small><span>افتح القناة ↗</span></a>
+          <a class="creator-channel" href="https://www.youtube.com/@Airrack" target="_blank" rel="noopener noreferrer"><b>Airrack</b><small>تحديات ومغامرات</small><span>افتح القناة ↗</span></a>
+        </div>
+        <div class="section-head"><div><small>اكتشف المزيد</small><h2>بحث يوتيوب</h2></div></div>
+        <form id="creator-search-form" class="creator-form"><label>اسم اليوتيوبر أو نوع المحتوى<input id="creator-search" type="search" placeholder="مثلاً: ألعاب، تقنية، طبخ..." required></label><button class="secondary" type="submit">ابحث في YouTube ↗</button></form>
+        <p class="creator-note">MK لا يعيد رفع فيديوهات اليوتيوبرز. المشاهدة تتم عبر تضمين يوتيوب أو فتح القناة الأصلية.</p>
+      </section>
+      <section class="page" id="page-chat">
+        <div class="page-title"><div><small>MK CHAT</small><h1>دردشاتك</h1><p>محادثات فردية ومجموعات في مكان واحد.</p></div><span class="page-symbol">▤</span></div>
+        <div class="chat-layout"><aside class="chat-people"><label class="search-label">ابحث عن عضو<input id="chat-user-search" type="search" placeholder="الاسم أو اسم المستخدم"></label><div id="chat-user-results" class="chat-results"></div><div class="section-head compact"><div><small>رسائلك</small><h2>المحادثات</h2></div></div><div id="chat-list" class="chat-results"></div><button id="create-group" class="secondary" type="button">＋ إنشاء مجموعة</button></aside><section id="chat-panel" class="chat-panel"><div class="empty-state tall"><span>▤</span><b>اختر محادثة أو ابحث عن عضو</b><p>رسائلك الخاصة لا يراها إلا المشاركون فيها.</p></div></section></div>
+      </section>
+      <section class="page" id="page-profile">
+        <div class="page-title"><div><small>MK ID</small><h1>ملفي الشخصي</h1><p>هويتك الموحدة داخل MK Universe.</p></div><span class="page-symbol">◎</span></div>
+        <div class="profile-card"><div class="avatar profile-avatar">MK</div><div><h2>عضو MK Universe</h2><p>سيظهر اسمك وصورتك ونبذتك هنا بعد إنشاء حساب MK ID.</p><span class="muted">الحساب الموحد قيد التجهيز</span></div></div>
+        <form id="profile-form" class="profile-edit"><h3>تعديل الملف الشخصي</h3><label>الاسم الظاهر<input id="profile-name" maxlength="40" placeholder="اسمك"></label><label>اسم المستخدم<input id="profile-username" maxlength="24" placeholder="username"></label><label>صورة الملف الشخصي<input id="profile-avatar-file" type="file" accept="image/jpeg,image/png,image/webp,image/gif"></label><label>نبذة عنك<textarea id="profile-bio" maxlength="160" rows="3" placeholder="اكتب نبذة قصيرة"></textarea></label><button class="primary" type="submit">حفظ التغييرات</button></form><div class="notice"><b>MK ID</b><p>حساب واحد للوصول إلى السينما والمنشورات والدردشة، دون إنشاء حساب منفصل لكل قسم.</p></div>
+      </section>
+      <section class="page" id="page-admin">
+        <div class="page-title"><div><small>MK AUDIENCE · OWNER CONSOLE</small><h1>إدارة المنصة</h1><p>لوحة المالك — الأدوات الإدارية محمية على مستوى قاعدة البيانات والخادم.</p></div><span class="page-symbol">⚙</span></div>
+        <div id="admin-stats" class="admin-stats"></div>
+        <div class="admin-section"><div class="section-head compact"><div><small>المستخدمون</small><h2>إدارة الأعضاء والحظر</h2></div><button id="refresh-users" class="text-button">تحديث</button></div><input id="admin-user-search" class="admin-search" type="search" placeholder="ابحث بالبريد أو الاسم أو اسم المستخدم"><div id="admin-users" class="admin-list"></div></div>
+        <div class="admin-section"><div class="section-head compact"><div><small>المراجعة والإشراف</small><h2>البلاغات</h2></div><button id="refresh-reports" class="text-button">تحديث</button></div><div id="admin-reports" class="admin-list"></div></div>
+        <div class="admin-section"><div class="section-head compact"><div><small>MK CINEMA</small><h2>إضافة فيلم أو مسلسل</h2></div></div>
+          <form id="admin-film-form" class="admin-form"><input id="film-id" type="hidden">
+            <label>العنوان<input id="film-title" required maxlength="180"></label>
+            <label>النوع<select id="film-type"><option value="movie">فيلم</option><option value="series">مسلسل</option><option value="documentary">وثائقي</option><option value="short">فيلم قصير</option></select></label>
+            <label>سنة الإصدار<input id="film-year" type="number" min="1888" max="2200"></label>
+            <label>التصنيفات (افصل بينها بفاصلة)<input id="film-genres" placeholder="أكشن، خيال علمي"></label>
+            <label>رابط الملصق HTTPS<input id="film-poster" type="url"></label><label>أو ارفع الملصق<input id="film-poster-file" type="file" accept="image/jpeg,image/png,image/webp,image/gif"></label>
+            <label>رابط الإعلان HTTPS<input id="film-trailer" type="url"></label><label>أو ارفع إعلاناً<input id="film-trailer-file" type="file" accept="video/mp4,video/webm"></label>
+            <label class="wide">رابط المشاهدة الرسمي أو المرخّص HTTPS<input id="film-watch" type="url" required></label>
+            <label>اسم المصدر<input id="film-source" required placeholder="القناة أو صاحب الحقوق"></label>
+            <label>أساس الحقوق<select id="film-rights"><option value="official_source">مصدر رسمي</option><option value="licensed">مرخّص للعرض</option><option value="public_domain">ملك عام موثّق</option></select></label>
+            <label class="wide">الوصف<textarea id="film-description" rows="3" maxlength="5000"></textarea></label>
+            <label class="check-label"><input id="film-published" type="checkbox"> نشر للجميع فوراً</label>
+            <button class="primary" type="submit">حفظ في مكتبة السينما</button>
+          </form><div id="admin-films" class="admin-list"></div>
+        </div>
+        <div class="admin-section"><div class="section-head compact"><div><small>سجل الإدارة</small><h2>آخر العمليات</h2></div><button id="refresh-audit" class="text-button">تحديث</button></div><div id="admin-audit" class="admin-list"></div></div>
+      </section>
+      <footer>© 2026 MK UNIVERSE <span>YOUR DIGITAL UNIVERSE</span></footer>
     </section>
   </main>
-
-  <dialog id="password-dialog" class="password-dialog">
-<form id="password-reset-form" class="form-stack">
-<h2>تعيين كلمة مرور جديدة</h2>
-<p class="muted small">اختَر كلمة مرور قوية من 8 أحرف على الأقل.</p>
-<label>كلمة المرور الجديدة<input id="new-password" type="password" minlength="8" autocomplete="new-password" required></label>
-<label>تأكيد كلمة المرور<input id="confirm-password" type="password" minlength="8" autocomplete="new-password" required></label>
-<button class="button button-primary" type="submit">حفظ كلمة المرور</button>
-</form>
-</dialog>
-<div id="toast-region" class="toast-region" role="status" aria-live="polite"></div>
-  <footer class="site-footer"><span>MK SOCIAL</span><span>YOUR DIGITAL UNIVERSE</span><span>نسخة تجريبية أولية</span></footer>
-  <script type="module" src="./app.js?v=3"></script>
-</body>
-</html>
+  <nav class="mobile-nav" id="mobile-nav"><button class="active" data-page="home">⌂<small>الرئيسية</small></button><button data-page="cinema">▣<small>السينما</small></button>
+    <button data-page="creators">▶<small>المبدعون</small></button><button data-page="social">◉<small>المنشورات</small></button><button data-page="chat">▤<small>الدردشة</small></button><button data-page="profile">◎<small>حسابي</small></button><button id="admin-mobile-nav" class="hidden" data-page="admin">⚙<small>الإدارة</small></button></nav>
+  <div id="notifications-panel" class="notifications-panel hidden"><div class="notifications-head"><b>الإشعارات</b><button id="notifications-close" type="button">×</button></div><div id="notifications-list"></div></div>
+  <section id="auth-modal" class="modal hidden" aria-hidden="true">
+    <div class="modal-backdrop" data-close-auth></div>
+    <div class="auth-dialog" role="dialog" aria-modal="true" aria-labelledby="auth-heading">
+      <button class="modal-close" type="button" data-close-auth aria-label="إغلاق">×</button>
+      <div class="auth-intro"><small>صحتك. مجتمعك.</small><h2>تواصل، شارك أفكارك، واكتشف أشخاصاً يشاركونك الاهتمامات.</h2><div class="auth-features"><span>مجتمع واحد</span><span>محتوى من اختيارك</span><span>تحكم في حسابك</span></div></div>
+      <span class="mini-mark">MK</span><small class="auth-kicker">MK ID · حساب واحد لكل عوالمك</small>
+      <h2 id="auth-heading">انضم إلى MK Social</h2><p id="auth-description">أنشئ حسابك وابدأ رحلتك.</p>
+      <form id="auth-form">
+        <label>البريد الإلكتروني<input id="auth-email" type="email" autocomplete="email" placeholder="name@example.com" value="kame9865yyy@gmail.com" required></label>
+        <label>كلمة المرور<input id="auth-password" type="password" autocomplete="current-password" minlength="8" maxlength="72" placeholder="8 أحرف على الأقل" required></label>
+        <button id="auth-submit" class="primary auth-submit" type="submit">دخول</button>
+      </form>
+      <button id="auth-mode-switch" class="auth-switch" type="button">ليس لديك حساب؟ أنشئ حساباً</button>
+      <p id="auth-terms" class="auth-terms">كلمة المرور لا تقل عن 8 أحرف.</p>
+    </div>
+  </section>
+  <div id="toast-region" aria-live="polite"></div><script type="module" src="./app.js"></script>
+</body></html>

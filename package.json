@@ -1,9 +1,9 @@
 {
-  "name": "mk-social",
+  "name": "mk-universe",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "check": "node --check app.js"
+    "check": "node --check app.js && node --check scripts/smoke-check.mjs && node scripts/smoke-check.mjs"
   }
 }
