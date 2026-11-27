@@ -13,7 +13,7 @@
   <div class="glow glow-a"></div><div class="glow glow-b"></div>
   <header class="topbar">
     <a class="brand" href="#" aria-label="MK Universe"><span class="brand-mark">MK</span><span><b>MK UNIVERSE</b><small>YOUR DIGITAL UNIVERSE</small></span></a>
-    <div class="top-actions"><span class="demo-pill"><i></i> معاينة أولية</span><button id="auth-button" class="auth-open">دخول / إنشاء حساب</button><button id="logout-button" class="auth-open hidden">خروج</button></div>
+    <div class="top-actions"><span class="demo-pill"><i></i> معاينة أولية</span><button id="notifications-button" class="icon-action hidden" type="button" aria-label="الإشعارات">♧<span id="notification-count" class="notification-count hidden">0</span></button><button id="auth-button" class="auth-open">دخول / إنشاء حساب</button><button id="logout-button" class="auth-open hidden">خروج</button></div>
   </header>
   <main class="layout">
     <aside class="sidebar">
@@ -89,7 +89,7 @@
     </section>
   </main>
   <nav class="mobile-nav" id="mobile-nav"><button class="active" data-page="home">⌂<small>الرئيسية</small></button><button data-page="cinema">▣<small>السينما</small></button><button data-page="social">◉<small>المنشورات</small></button><button data-page="chat">▤<small>الدردشة</small></button><button data-page="profile">◎<small>حسابي</small></button><button id="admin-mobile-nav" class="hidden" data-page="admin">⚙<small>الإدارة</small></button></nav>
-  <section id="auth-modal" class="modal hidden" aria-hidden="true">
+  <div id="notifications-panel" class="notifications-panel hidden"><div class="notifications-head"><b>الإشعارات</b><button id="notifications-close" type="button">×</button></div><div id="notifications-list"></div></div>\n  <section id="auth-modal" class="modal hidden" aria-hidden="true">
     <div class="modal-backdrop" data-close-auth></div>
     <div class="auth-dialog" role="dialog" aria-modal="true" aria-labelledby="auth-heading">
       <button class="modal-close" type="button" data-close-auth aria-label="إغلاق">×</button>
