@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#100b10">
+  <meta name="description" content="MK Social — عالمك الرقمي في مكان واحد.">
+  <title>MK Social — YOUR DIGITAL UNIVERSE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="ambient ambient-one"></div>
+  <div class="ambient ambient-two"></div>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="MK Social">
+      <span class="brand-mark">MK</span>
+      <span class="brand-copy"><strong>MK SOCIAL</strong><small>YOUR DIGITAL UNIVERSE</small></span>
+    </a>
+    <div class="topbar-actions">
+      <span id="connection-status" class="connection-status"><i></i> جاري الاتصال</span>
+      <button id="logout-button" class="button button-quiet hidden" type="button">خروج</button>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section id="auth-view" class="auth-layout">
+      <div class="hero-copy">
+        <span class="eyebrow">مساحتك الرقمية تبدأ هنا</span>
+        <h1>عالمك.<br><span>قصتك.</span> مجتمعك.</h1>
+        <p>تواصل، شارك أفكارك، واكتشف أشخاصاً يشاركونك الاهتمامات.</p>
+        <div class="hero-points"><span>● مجتمع واحد</span><span>● محتوى من اختيارك</span><span>● تحكم في حسابك</span></div>
+      </div>
+      <section class="panel auth-panel">
+        <div class="panel-heading">
+          <span class="mini-mark">MK</span>
+          <div><h2 id="auth-title">مرحباً بعودتك</h2><p id="auth-subtitle">سجّل الدخول للمتابعة إلى عالمك.</p></div>
+        </div>
+        <form id="auth-form" class="form-stack">
+          <label>البريد الإلكتروني<input id="auth-email" type="email" autocomplete="email" placeholder="name@example.com" required maxlength="254"></label>
+          <label id="name-field" class="hidden">الاسم الظاهر<input id="auth-name" type="text" autocomplete="name" placeholder="كيف يراك الناس؟" maxlength="40"></label>
+          <label>كلمة المرور<input id="auth-password" type="password" autocomplete="current-password" placeholder="8 أحرف على الأقل" minlength="8" required></label>
+          <button id="auth-submit" class="button button-primary" type="submit">تسجيل الدخول</button>
+        </form>
+        <div class="auth-links">
+          <button id="auth-switch" class="text-button" type="button">إنشاء حساب جديد</button>
+          <button id="forgot-button" class="text-button muted" type="button">نسيت كلمة المرور؟</button>
+        </div>
+        <p class="fine-print">بإنشاء حساب، أنت توافق على استخدام المنصة وفق قواعد المجتمع.</p>
+      </section>
+    </section>
+
+    <section id="app-view" class="app-layout hidden">
+      <aside class="sidebar">
+        <section class="panel profile-mini">
+          <div id="profile-avatar" class="avatar avatar-large">M</div>
+          <h2 id="profile-display-name">عضو MK</h2>
+          <p id="profile-username" class="muted">@member</p>
+          <form id="profile-form" class="form-stack compact-form">
+            <label>اسم المستخدم<input id="profile-handle" type="text" minlength="3" maxlength="24" pattern="[A-Za-z0-9_]+" placeholder="username" required></label>
+            <label>نبذة عنك<textarea id="profile-bio" maxlength="160" rows="3" placeholder="اكتب شيئاً عن نفسك..."></textarea></label>
+            <button class="button button-secondary" type="submit">حفظ الملف الشخصي</button>
+          </form>
+          <p class="tiny-note">اسم المستخدم: 3–24 حرفاً إنجليزياً أو رقماً أو _</p>
+        </section>
+        <section class="panel search-panel">
+          <h3>اكتشف المجتمع</h3>
+          <form id="search-form" class="search-form">
+            <input id="search-input" type="search" placeholder="ابحث باسم المستخدم" maxlength="24" aria-label="ابحث باسم المستخدم">
+            <button class="button button-secondary" type="submit">بحث</button>
+          </form>
+          <div id="search-results" class="search-results"><p class="muted small">ابحث عن أعضاء MK.</p></div>
+        </section>
+      </aside>
+
+      <section class="main-column">
+        <section class="welcome-strip">
+          <div><span class="eyebrow">أهلاً بك في MK</span><h1>مساحتك، بصوتك.</h1></div>
+          <span class="welcome-orb">MK</span>
+        </section>
+        <section class="panel composer">
+          <div class="section-title"><div><span class="eyebrow">شارك المجتمع</span><h2>ماذا يدور في بالك؟</h2></div><span class="status-dot">منشور جديد</span></div>
+          <form id="post-form" class="form-stack">
+            <textarea id="post-content" rows="4" maxlength="5000" placeholder="اكتب منشوراً..."></textarea>
+            <div class="composer-footer"><span class="muted small">المنشور النصي متاح في النسخة الأولى.</span><button class="button button-primary" type="submit">نشر الآن <span aria-hidden="true">←</span></button></div>
+          </form>
+        </section>
+        <section class="feed-section">
+          <div class="section-title feed-heading"><div><span class="eyebrow">آخر المشاركات</span><h2>الموجز</h2></div><button id="refresh-feed" class="button button-quiet" type="button">تحديث ↻</button></div>
+          <div id="feed-list" class="feed-list"><div class="panel empty-state">جاري تحميل المنشورات...</div></div>
+        </section>
+      </section>
+    </section>
+  </main>
+
+  <div id="toast-region" class="toast-region" role="status" aria-live="polite"></div>
+  <footer class="site-footer"><span>MK SOCIAL</span><span>YOUR DIGITAL UNIVERSE</span><span>نسخة تجريبية أولية</span></footer>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
