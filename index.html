@@ -100,12 +100,11 @@
       <h2 id="auth-heading">انضم إلى MK Social</h2><p id="auth-description">أنشئ حسابك وابدأ رحلتك.</p>
       <form id="auth-form">
         <label>البريد الإلكتروني<input id="auth-email" type="email" autocomplete="email" placeholder="name@example.com" value="kame9865yyy@gmail.com" required></label>
-        <label id="display-name-wrap">الاسم الظاهر<input id="auth-display-name" type="text" autocomplete="name" maxlength="40" placeholder="اسمك الظاهر"></label>
-        <label id="otp-wrap" class="hidden">رمز التحقق (6 أرقام)<input id="auth-otp" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" placeholder="000000"></label>
-        <button id="auth-submit" class="primary auth-submit" type="submit">إنشاء الحساب / إرسال الرمز</button>
+        <label>كلمة المرور<input id="auth-password" type="password" autocomplete="current-password" minlength="8" maxlength="72" placeholder="8 أحرف على الأقل" required></label>
+        <button id="auth-submit" class="primary auth-submit" type="submit">دخول</button>
       </form>
-      <button id="change-email" class="auth-switch hidden" type="button">تغيير البريد الإلكتروني</button>
-      <p class="auth-terms">رمز مؤقت يُرسل إلى بريدك الإلكتروني، ولا تحتاج إلى كلمة مرور.</p>
+      <button id="auth-mode-switch" class="auth-switch" type="button">ليس لديك حساب؟ أنشئ حساباً</button>
+      <p id="auth-terms" class="auth-terms">كلمة المرور لا تقل عن 8 أحرف.</p>
     </div>
   </section>
   <div id="toast-region" aria-live="polite"></div><script type="module" src="./app.js"></script>
