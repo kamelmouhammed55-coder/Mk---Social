@@ -20,7 +20,8 @@
       <div class="welcome"><small>مرحباً بك في</small><strong>عالمك الرقمي</strong><span>كل اهتماماتك في مكان واحد.</span></div>
       <nav id="main-nav">
         <button class="nav-item active" data-page="home"><span>⌂</span> الرئيسية</button>
-        <button class="nav-item" data-page="cinema"><span>▣</span> السينما <em>قريباً</em></button>
+        <button class="nav-item" data-page="cinema"><span>▣</span> السينما</button>
+        <button class="nav-item" data-page="creators"><span>▶</span> فيديوهات اليوتيوبرز</button>
         <button class="nav-item" data-page="social"><span>◉</span> المنشورات</button>
         <button class="nav-item" data-page="chat"><span>▤</span> الدردشة <em>قريباً</em></button>
         <button class="nav-item" data-page="profile"><span>◎</span> ملفي الشخصي</button>
@@ -37,6 +38,7 @@
         <div class="section-head"><div><small>ابدأ الاستكشاف</small><h2>عوالمك داخل MK</h2></div><span class="live-dot">تجربة أولية</span></div>
         <div class="module-grid">
           <button class="module-card cinema-card" data-go="cinema"><span class="module-icon">▣</span><small>MK CINEMA</small><b>شاهد واكتشف</b><p>أفلام ومسلسلات ومكتبة مشاهدة.</p><span class="card-arrow">←</span></button>
+          <button class="module-card creators-card" data-go="creators"><span class="module-icon">▶</span><small>MK CREATORS</small><b>شاهد صناع المحتوى</b><p>فيديوهات من قنوات يوتيوب الرسمية.</p><span class="card-arrow">←</span></button>
           <button class="module-card social-card" data-go="social"><span class="module-icon">◉</span><small>MK SOCIAL</small><b>شارك لحظاتك</b><p>منشورات وصور وفيديوهات وتفاعل.</p><span class="card-arrow">←</span></button>
           <button class="module-card chat-card" data-go="chat"><span class="module-icon">▤</span><small>MK CHAT</small><b>ابقَ على تواصل</b><p>محادثات خاصة ومجموعات.</p><span class="card-arrow">←</span></button>
         </div>
@@ -53,6 +55,15 @@
         <div class="cinema-banner"><div><span class="eyebrow">قريباً في MK</span><h2>مكتبتك السينمائية<br>في عالم واحد.</h2><p>بحث وتصنيفات وقوائم مشاهدة ومتابعة تقدمك.</p></div><div class="film-reel">✦</div></div>
         <div class="section-head"><div><small>مخطط له</small><h2>مكتبة الأفلام</h2></div><span class="muted">المرحلة القادمة</span></div>
         <div class="empty-state"><span>▣</span><b>نجهّز لك تجربة سينمائية متكاملة</b><p>سنضيف كتالوجاً ومصادر مشاهدة قانونية بعد تجهيز قاعدة المحتوى وحقوق العرض.</p></div>
+      </section>
+      <section class="page" id="page-creators">
+        <div class="page-title"><div><small>MK CREATORS</small><h1>عالم اليوتيوبرز</h1><p>شاهد فيديوهات صناع المحتوى من قنواتهم الرسمية على YouTube.</p></div><span class="page-symbol">▶</span></div>
+        <div class="creator-banner"><div><span class="eyebrow">شاهد من المصدر الأصلي</span><h2>صنّاع المحتوى<br>في مكان واحد.</h2><p>الفيديو يبقى مستضافاً على يوتيوب، مع احترام حقوق صاحبه.</p></div><span class="creator-play">▶</span></div>
+        <form id="creator-video-form" class="creator-form"><label>رابط فيديو يوتيوب<input id="creator-video-url" type="url" inputmode="url" placeholder="https://www.youtube.com/watch?v=..." required></label><button class="primary" type="submit">شاهد الفيديو</button></form>
+        <div id="creator-video-player" class="creator-player"><div class="empty-state"><span>▶</span><b>اختَر فيديو لمشاهدته</b><p>ألصق رابط فيديو من يوتيوب لعرضه هنا.</p></div></div>
+        <div class="section-head"><div><small>اكتشف قنوات جديدة</small><h2>بحث يوتيوب</h2></div></div>
+        <form id="creator-search-form" class="creator-form"><label>اسم اليوتيوبر أو نوع المحتوى<input id="creator-search" type="search" placeholder="مثلاً: ألعاب، تقنية، طبخ..." required></label><button class="secondary" type="submit">ابحث في YouTube ↗</button></form>
+        <p class="creator-note">MK لا يعيد رفع فيديوهات اليوتيوبرز. المشاهدة تتم عبر تضمين يوتيوب أو فتح القناة الأصلية.</p>
       </section>
       <section class="page" id="page-chat">
         <div class="page-title"><div><small>MK CHAT</small><h1>دردشاتك</h1><p>محادثات فردية ومجموعات في مكان واحد.</p></div><span class="page-symbol">▤</span></div>
@@ -89,7 +100,8 @@
       <footer>© 2026 MK UNIVERSE <span>YOUR DIGITAL UNIVERSE</span></footer>
     </section>
   </main>
-  <nav class="mobile-nav" id="mobile-nav"><button class="active" data-page="home">⌂<small>الرئيسية</small></button><button data-page="cinema">▣<small>السينما</small></button><button data-page="social">◉<small>المنشورات</small></button><button data-page="chat">▤<small>الدردشة</small></button><button data-page="profile">◎<small>حسابي</small></button><button id="admin-mobile-nav" class="hidden" data-page="admin">⚙<small>الإدارة</small></button></nav>
+  <nav class="mobile-nav" id="mobile-nav"><button class="active" data-page="home">⌂<small>الرئيسية</small></button><button data-page="cinema">▣<small>السينما</small></button>
+    <button data-page="creators">▶<small>المبدعون</small></button><button data-page="social">◉<small>المنشورات</small></button><button data-page="chat">▤<small>الدردشة</small></button><button data-page="profile">◎<small>حسابي</small></button><button id="admin-mobile-nav" class="hidden" data-page="admin">⚙<small>الإدارة</small></button></nav>
   <div id="notifications-panel" class="notifications-panel hidden"><div class="notifications-head"><b>الإشعارات</b><button id="notifications-close" type="button">×</button></div><div id="notifications-list"></div></div>
   <section id="auth-modal" class="modal hidden" aria-hidden="true">
     <div class="modal-backdrop" data-close-auth></div>
