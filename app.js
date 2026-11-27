@@ -94,6 +94,7 @@ async function refreshIdentity(user){
     }
   }
   updateAccountUI();
+  if(state.user)startNotifications();
   if(state.isOwner)loadAdminDashboard();
   if(state.user){loadSocialFeed();loadCinema()}
 }
@@ -263,7 +264,7 @@ async function loadNotifications(){
 function startNotifications(){
   if(!state.user)return;
   loadNotifications();
-  if(state.notificationChannel)supabase.removeChannel(state.notificationChannel);
+  if(state.notificationChannel)return;
   state.notificationChannel=supabase.channel("mk-notifications-"+state.user.id)
     .on("postgres_changes",{event:"INSERT",schema:"public",table:"notifications",filter:"recipient_id=eq."+state.user.id},()=>loadNotifications()).subscribe();
 }
@@ -274,7 +275,15 @@ async function loadCinema(){
   const {data:films,error}=await supabase.from("cinema_catalog").select("id,title,description,content_type,release_year,genres,poster_url,trailer_url,watch_url,source_name,rights_basis,published").eq("published",true).order("created_at",{ascending:false}).limit(100);
   if(error){console.error("Cinema:",error.message);return}
   const existing=$("#cinema-live-grid");if(existing)existing.remove();
-  if(!films?.length)return;
+  const empty=host.querySelector(".empty-state");
+  const section=host.querySelector(".section-head");
+  if(!films?.length){
+    if(empty)empty.classList.remove("hidden");
+    if(section){const label=section.querySelector("small");const heading=section.querySelector("h2");const status=section.querySelector(".muted");if(label)label.textContent="مخطط له";if(heading)heading.textContent="مكتبة الأفلام";if(status)status.textContent="المرحلة القادمة"}
+    return;
+  }
+  if(empty)empty.classList.add("hidden");
+  if(section){const label=section.querySelector("small");const heading=section.querySelector("h2");const status=section.querySelector(".muted");if(label)label.textContent="المكتبة";if(heading)heading.textContent="الأفلام والمسلسلات";if(status)status.textContent=films.length+" عنوان"}
   const grid=document.createElement("div");grid.id="cinema-live-grid";grid.className="cinema-grid";
   films.forEach(film=>{
     const card=document.createElement("article");card.className="cinema-card-live";
