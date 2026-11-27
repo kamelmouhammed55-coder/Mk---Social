@@ -8,7 +8,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
 
 const $ = (s, root=document) => root.querySelector(s);
 const $$ = (s, root=document) => [...root.querySelectorAll(s)];
-const state = { user:null, profile:null, isOwner:false, authMode:"signup", busy:false, chatId:null, chatChannel:null, notificationChannel:null, posts:[] };
+const state = { user:null, profile:null, isOwner:false, authMode:"signup", busy:false, chatId:null, chatChannel:null, notificationChannel:null, posts:[] };\nlet searchDelay;
 
 function toast(message,type="success"){
   const el=document.createElement("div");el.className="toast "+type;el.textContent=message;
@@ -316,6 +316,24 @@ async function startConversation(profile){
   if(memberError){toast(memberError.message,"error");return}
   await loadChatList();openChat(id,profile.display_name||profile.username);
 }
+$("#create-group").addEventListener("click",async()=>{
+  if(!state.user){openAuth("signin");return}
+  const title=prompt("اسم المجموعة:");if(!title?.trim())return;
+  const names=prompt("أسماء المستخدمين (username) مفصولة بفواصل:");if(!names?.trim())return;
+  const usernames=[...new Set(names.split(",").map(x=>x.trim().replace(/^@/,"").toLowerCase()).filter(Boolean))].slice(0,30);
+  if(!usernames.length)return;
+  const {data:people,error}=await supabase.from("profiles").select("id,username").in("username",usernames);
+  if(error){toast(error.message,"error");return}
+  const valid=(people||[]).filter(p=>p.id!==state.user.id);
+  if(!valid.length){toast("لم نجد أعضاء بهذه الأسماء.","error");return}
+  const id=crypto.randomUUID();
+  const {error:createError}=await supabase.from("conversations").insert({id,created_by:state.user.id,is_group:true,title:title.trim().slice(0,80)});
+  if(createError){toast(createError.message,"error");return}
+  const members=[state.user.id,...valid.map(p=>p.id)].map(user_id=>({conversation_id:id,user_id}));
+  const {error:memberError}=await supabase.from("conversation_members").insert(members);
+  if(memberError){toast(memberError.message,"error");return}
+  await loadChatList();await openChat(id,title.trim());toast("تم إنشاء المجموعة.");
+});
 async function openChat(id,title){
   state.chatId=id;
   if(state.chatChannel){await supabase.removeChannel(state.chatChannel);state.chatChannel=null}
@@ -383,7 +401,15 @@ async function loadAdminUsers(){
       try{await callOwnerAction("delete",{user_id:user.user_id});toast("تم حذف الحساب.");await loadAdminDashboard()}
       catch(error){toast(error.message||"تعذر حذف الحساب.","error")}
     });
-    actions.append(button,del);row.append(info,actions);host.append(row);
+    const editProfile=document.createElement("button");editProfile.className="small-action";editProfile.textContent="تعديل الملف";
+    editProfile.addEventListener("click",async()=>{
+      const displayName=prompt("الاسم الظاهر:",user.display_name||"");if(displayName===null)return;
+      const username=prompt("اسم المستخدم:",user.username||"");if(username===null)return;
+      const bio=prompt("النبذة:",user.bio||"");if(bio===null)return;
+      const {error}=await supabase.rpc("admin_update_profile",{p_user_id:user.user_id,p_display_name:displayName,p_bio:bio,p_username:username});
+      if(error){toast(error.message,"error");return}toast("تم تحديث الملف الشخصي.");loadAdminUsers();
+    });
+    actions.append(button,editProfile,del);row.append(info,actions);host.append(row);
   });
 }
 async function loadAdminReports(){
@@ -403,6 +429,14 @@ async function loadAdminReports(){
       const hide=document.createElement("button");hide.className="small-action danger";hide.textContent="إخفاء المنشور";
       hide.addEventListener("click",async()=>{const {error}=await supabase.rpc("admin_set_post_visibility",{p_post_id:report.target_id,p_hidden:true});if(error){toast(error.message,"error");return}toast("تم إخفاء المنشور.");loadSocialFeed()});actions.append(hide);
     }
+    if(report.target_type==="comment"){
+      const removeComment=document.createElement("button");removeComment.className="small-action danger";removeComment.textContent="حذف التعليق";
+      removeComment.addEventListener("click",async()=>{const {error}=await supabase.rpc("admin_delete_comment",{p_comment_id:report.target_id});if(error){toast(error.message,"error");return}toast("تم حذف التعليق.");loadAdminReports()});actions.append(removeComment);
+    }
+    if(report.target_type==="user"){
+      const banUser=document.createElement("button");banUser.className="small-action danger";banUser.textContent="حظر العضو";
+      banUser.addEventListener("click",async()=>{const reason=prompt("سبب الحظر:",report.reason);if(!reason?.trim())return;try{await callOwnerAction("ban",{user_id:report.target_id,reason,duration:"week"});toast("تم حظر العضو.");loadAdminUsers()}catch(error){toast(error.message,"error")}});actions.append(banUser);
+    }
     row.append(info,actions);host.append(row);
   });
 }
@@ -414,9 +448,17 @@ async function loadAdminFilms(){
     const row=document.createElement("div");row.className="admin-row";const info=document.createElement("div");
     info.append(safeText(document.createElement("b"),film.title),safeText(document.createElement("small"),film.content_type+" · "+film.source_name+" · "+film.rights_basis+" · "+(film.published?"منشور":"مسودة")));
     const actions=document.createElement("div");actions.className="admin-row-actions";
+    const edit=document.createElement("button");edit.className="small-action";edit.textContent="تعديل";
+    edit.addEventListener("click",async()=>{
+      const {data:full,error}=await supabase.from("cinema_catalog").select("*").eq("id",film.id).single();
+      if(error){toast(error.message,"error");return}
+      $("#film-id").value=full.id;$("#film-title").value=full.title;$("#film-type").value=full.content_type;$("#film-year").value=full.release_year||"";$("#film-genres").value=(full.genres||[]).join(", ");
+      $("#film-poster").value=full.poster_url||"";$("#film-trailer").value=full.trailer_url||"";$("#film-watch").value=full.watch_url;$("#film-source").value=full.source_name||"";$("#film-rights").value=full.rights_basis;$("#film-description").value=full.description||"";$("#film-published").checked=full.published;
+      $("#admin-film-form").scrollIntoView({behavior:"smooth",block:"center"});
+    });
     const del=document.createElement("button");del.className="small-action danger";del.textContent="حذف";
     del.addEventListener("click",async()=>{if(!confirm("حذف هذا العنوان من مكتبة السينما؟"))return;const {error}=await supabase.rpc("admin_delete_film",{p_film_id:film.id});if(error){toast(error.message,"error");return}loadAdminFilms();loadCinema()});
-    actions.append(del);row.append(info,actions);host.append(row);
+    actions.append(edit,del);row.append(info,actions);host.append(row);
   });
 }
 async function loadAdminAudit(){
@@ -432,14 +474,14 @@ $("#admin-film-form").addEventListener("submit",async event=>{
   const button=$("#admin-film-form button[type=submit]");button.disabled=true;
   try{
     const {error}=await supabase.rpc("admin_upsert_film",{
-      p_id:null,p_title:$("#film-title").value.trim(),p_description:$("#film-description").value.trim(),
+      p_id:$("#film-id").value||null,p_title:$("#film-title").value.trim(),p_description:$("#film-description").value.trim(),
       p_content_type:$("#film-type").value,p_release_year:$("#film-year").value?Number($("#film-year").value):null,
       p_genres:$("#film-genres").value.split(",").map(x=>x.trim()).filter(Boolean),
       p_poster_url:$("#film-poster").value.trim()||null,p_trailer_url:$("#film-trailer").value.trim()||null,
       p_watch_url:$("#film-watch").value.trim(),p_source_name:$("#film-source").value.trim(),
       p_rights_basis:$("#film-rights").value,p_published:$("#film-published").checked
     });
-    if(error)throw error;$("#admin-film-form").reset();toast("تم حفظ عنوان السينما.");await loadAdminFilms();await loadCinema();await loadAdminDashboard();
+    if(error)throw error;$("#admin-film-form").reset();$("#film-id").value="";toast("تم حفظ عنوان السينما.");await loadAdminFilms();await loadCinema();await loadAdminDashboard();
   }catch(error){toast(error.message||"تعذر حفظ العنوان.","error")}
   finally{button.disabled=false}
 });
