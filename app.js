@@ -43,6 +43,15 @@ $("#auth-button").addEventListener("click",()=>openAuth(state.user?"signin":"sig
 $("#auth-switch").addEventListener("click",()=>openAuth(state.authMode==="signup"?"signin":"signup"));
 $("#logout-button").addEventListener("click",async()=>{const {error}=await supabase.auth.signOut();if(error){toast(error.message,"error");return}state.user=null;state.profile=null;state.isOwner=false;updateAccountUI();toast("تم تسجيل الخروج.")});
 
+async function uploadUserMedia(file,folder){
+  if(!state.user)throw new Error("سجل الدخول أولاً.");
+  if(file.size>100*1024*1024)throw new Error("الحد الأقصى للملف 100 ميغابايت.");
+  const ext=(file.name.split(".").pop()||"bin").toLowerCase();
+  const path=state.user.id+"/"+folder+"/"+crypto.randomUUID()+"."+ext;
+  const {error}=await supabase.storage.from("mk-universe-media").upload(path,file,{contentType:file.type,upsert:false});
+  if(error)throw error;
+  return supabase.storage.from("mk-universe-media").getPublicUrl(path).data.publicUrl;
+}
 async function loadProfile(user){
   const {data,error}=await supabase.from("profiles").select("display_name,username,avatar_url,bio").eq("id",user.id).maybeSingle();
   if(error){console.error("Profile load:",error.message);return null}return data;
@@ -203,13 +212,18 @@ $("#post-form").addEventListener("submit",async event=>{
 
 $("#profile-form").addEventListener("submit",async event=>{
   event.preventDefault();if(!state.user){openAuth("signin");return}
-  const {error}=await supabase.from("profiles").update({
-    display_name:$("#profile-name").value.trim().slice(0,40),
-    username:$("#profile-username").value.trim().toLowerCase().slice(0,24)||null,
-    bio:$("#profile-bio").value.trim().slice(0,160),
-    updated_at:new Date().toISOString()
-  }).eq("id",state.user.id);
-  if(error){toast(error.message,"error");return}state.profile=await loadProfile(state.user);updateAccountUI();toast("تم حفظ ملفك الشخصي.");
+  try{
+    const updates={
+      display_name:$("#profile-name").value.trim().slice(0,40),
+      username:$("#profile-username").value.trim().toLowerCase().slice(0,24)||null,
+      bio:$("#profile-bio").value.trim().slice(0,160),
+      updated_at:new Date().toISOString()
+    };
+    const avatarFile=$("#profile-avatar-file").files?.[0];
+    if(avatarFile){if(!avatarFile.type.startsWith("image/"))throw new Error("اختر صورة صالحة.");updates.avatar_url=await uploadUserMedia(avatarFile,"avatar")}
+    const {error}=await supabase.from("profiles").update(updates).eq("id",state.user.id);
+    if(error)throw error;state.profile=await loadProfile(state.user);updateAccountUI();$("#profile-avatar-file").value="";toast("تم حفظ ملفك الشخصي.");
+  }catch(error){toast(error.message||"تعذر حفظ الملف.","error")}
 });
 
 async function loadNotifications(){
@@ -475,11 +489,15 @@ $("#admin-film-form").addEventListener("submit",async event=>{
   event.preventDefault();if(!state.isOwner)return;
   const button=$("#admin-film-form button[type=submit]");button.disabled=true;
   try{
+    let posterUrl=$("#film-poster").value.trim()||null,trailerUrl=$("#film-trailer").value.trim()||null;
+    const posterFile=$("#film-poster-file").files?.[0],trailerFile=$("#film-trailer-file").files?.[0];
+    if(posterFile){if(!posterFile.type.startsWith("image/"))throw new Error("ملف الملصق يجب أن يكون صورة.");posterUrl=await uploadUserMedia(posterFile,"cinema-posters")}
+    if(trailerFile){if(!trailerFile.type.startsWith("video/"))throw new Error("ملف الإعلان يجب أن يكون فيديو.");trailerUrl=await uploadUserMedia(trailerFile,"cinema-trailers")}
     const {error}=await supabase.rpc("admin_upsert_film",{
       p_id:$("#film-id").value||null,p_title:$("#film-title").value.trim(),p_description:$("#film-description").value.trim(),
       p_content_type:$("#film-type").value,p_release_year:$("#film-year").value?Number($("#film-year").value):null,
       p_genres:$("#film-genres").value.split(",").map(x=>x.trim()).filter(Boolean),
-      p_poster_url:$("#film-poster").value.trim()||null,p_trailer_url:$("#film-trailer").value.trim()||null,
+      p_poster_url:posterUrl,p_trailer_url:trailerUrl,
       p_watch_url:$("#film-watch").value.trim(),p_source_name:$("#film-source").value.trim(),
       p_rights_basis:$("#film-rights").value,p_published:$("#film-published").checked
     });
