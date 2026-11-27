@@ -8,7 +8,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
 
 const $ = (s, root=document) => root.querySelector(s);
 const $$ = (s, root=document) => [...root.querySelectorAll(s)];
-const state = { user:null, profile:null, isOwner:false, authMode:"signup", busy:false, chatId:null, chatChannel:null, notificationChannel:null, posts:[] };
+const state = { user:null, profile:null, isOwner:false, busy:false, otpStep:false, pendingOtpEmail:"", chatId:null, chatChannel:null, notificationChannel:null, posts:[] };
 let searchDelay;
 
 function toast(message,type="success"){
@@ -27,21 +27,19 @@ function navigate(page){
 $$("[data-page]").forEach(btn=>btn.addEventListener("click",()=>navigate(btn.dataset.page)));
 $$("[data-go]").forEach(btn=>btn.addEventListener("click",()=>navigate(btn.dataset.go)));
 
-function openAuth(mode=state.authMode){
-  state.authMode=mode;const signup=mode==="signup";
-  $("#auth-heading").textContent=signup?"انضم إلى MK Universe":"مرحباً بعودتك";
-  $("#auth-description").textContent=signup?"أنشئ حسابك وابدأ رحلتك.":"سجل الدخول إلى حساب MK ID.";
-  $("#display-name-wrap").classList.toggle("hidden",!signup);$("#auth-name").required=signup;
-  $("#auth-password").autocomplete=signup?"new-password":"current-password";
-  $("#auth-submit").textContent=signup?"إنشاء الحساب":"تسجيل الدخول";
-  $("#auth-switch").textContent=signup?"لديك حساب؟ سجل الدخول":"ليس لديك حساب؟ أنشئ حساباً";
-  $("#forgot-password").classList.toggle("hidden",signup);
+function openAuth(){
+  state.otpStep=false;state.pendingOtpEmail="";
+  $("#auth-heading").textContent="الدخول إلى MK Universe";
+  $("#auth-description").textContent="اكتب بريدك الإلكتروني ونرسل لك رمزاً من 6 أرقام.";
+  $("#auth-email").disabled=false;$("#auth-email").value="";
+  $("#auth-otp").value="";$("#otp-wrap").classList.add("hidden");
+  $("#change-email").classList.add("hidden");
+  $("#auth-submit").textContent="إرسال الرمز";
   $("#auth-modal").classList.remove("hidden");$("#auth-modal").setAttribute("aria-hidden","false");
 }
 function closeAuth(){$("#auth-modal").classList.add("hidden");$("#auth-modal").setAttribute("aria-hidden","true")}
 $$("[data-close-auth]").forEach(el=>el.addEventListener("click",closeAuth));
-$("#auth-button").addEventListener("click",()=>openAuth(state.user?"signin":"signup"));
-$("#auth-switch").addEventListener("click",()=>openAuth(state.authMode==="signup"?"signin":"signup"));
+$("#auth-button").addEventListener("click",()=>openAuth());
 $("#logout-button").addEventListener("click",async()=>{const {error}=await supabase.auth.signOut();if(error){toast(error.message,"error");return}state.user=null;state.profile=null;state.isOwner=false;updateAccountUI();toast("تم تسجيل الخروج.")});
 
 async function uploadUserMedia(file,folder){
@@ -101,26 +99,38 @@ async function refreshIdentity(user){
 }
 $("#auth-form").addEventListener("submit",async event=>{
   event.preventDefault();if(state.busy)return;
-  const button=$("#auth-submit"),email=$("#auth-email").value.trim().toLowerCase(),password=$("#auth-password").value,displayName=$("#auth-name").value.trim();
+  const button=$("#auth-submit"),email=state.pendingOtpEmail||$("#auth-email").value.trim().toLowerCase();
   state.busy=true;button.disabled=true;button.textContent="لحظة من فضلك...";
   try{
-    if(state.authMode==="signup"){
-      const {data,error}=await supabase.auth.signUp({email,password,options:{data:{display_name:displayName},emailRedirectTo:window.location.href.split("#")[0]}});
+    if(!state.otpStep){
+      if(!email)throw new Error("اكتب بريدك الإلكتروني أولاً.");
+      const {error}=await supabase.auth.signInWithOtp({email,options:{shouldCreateUser:true}});
       if(error)throw error;
-      closeAuth();
-      if(data.session){await refreshIdentity(data.user);toast("تم إنشاء حساب MK ID.")}
-      else toast("أرسلنا رابط تأكيد إلى بريدك. أكّد البريد ثم سجل الدخول.");
+      state.pendingOtpEmail=email;state.otpStep=true;
+      $("#auth-email").disabled=true;$("#otp-wrap").classList.remove("hidden");
+      $("#change-email").classList.remove("hidden");
+      $("#auth-description").textContent="أرسلنا رمزاً من 6 أرقام إلى "+email+". أدخله لإكمال الدخول.";
+      $("#auth-submit").textContent="تأكيد الرمز";
+      $("#auth-otp").focus();
+      toast("تم إرسال رمز التحقق إلى بريدك.");
     }else{
-      const {data,error}=await supabase.auth.signInWithPassword({email,password});if(error)throw error;
-      await refreshIdentity(data.user);closeAuth();toast("مرحباً بك في MK Universe.");
+      const token=$("#auth-otp").value.trim();
+      if(!/^\\d{6}$/.test(token))throw new Error("أدخل الرمز المكوّن من 6 أرقام.");
+      const {data,error}=await supabase.auth.verifyOtp({email:state.pendingOtpEmail,token,type:"email"});
+      if(error)throw error;
+      await refreshIdentity(data.user);closeAuth();
+      state.otpStep=false;state.pendingOtpEmail="";
+      toast("مرحباً بك في MK Universe.");
     }
   }catch(error){toast(error.message||"تعذر إكمال العملية.","error")}
-  finally{state.busy=false;button.disabled=false;button.textContent=state.authMode==="signup"?"إنشاء الحساب":"تسجيل الدخول"}
+  finally{state.busy=false;button.disabled=false;button.textContent=state.otpStep?"تأكيد الرمز":"إرسال الرمز"}
 });
-$("#forgot-password").addEventListener("click",async()=>{
-  const email=$("#auth-email").value.trim().toLowerCase();if(!email){toast("اكتب بريدك الإلكتروني أولاً.","error");return}
-  const {error}=await supabase.auth.resetPasswordForEmail(email,{redirectTo:window.location.href.split("#")[0]});
-  if(error){toast(error.message,"error");return}toast("إذا كان البريد مسجلاً، سيصلك رابط استعادة كلمة المرور.");
+$("#change-email").addEventListener("click",()=>{
+  state.otpStep=false;state.pendingOtpEmail="";
+  $("#auth-email").disabled=false;$("#auth-otp").value="";
+  $("#otp-wrap").classList.add("hidden");$("#change-email").classList.add("hidden");
+  $("#auth-description").textContent="اكتب بريدك الإلكتروني ونرسل لك رمزاً من 6 أرقام.";
+  $("#auth-submit").textContent="إرسال الرمز";
 });
 supabase.auth.onAuthStateChange((event,session)=>{
   if(event==="PASSWORD_RECOVERY"){
