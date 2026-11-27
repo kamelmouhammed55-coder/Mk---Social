@@ -509,8 +509,30 @@ async function handleSession(session) {
   }
 }
 
-supabase.auth.onAuthStateChange((_event, session) => {
+supabase.auth.onAuthStateChange((event, session) => {
+  if (event === "PASSWORD_RECOVERY") {
+    const dialog = $("#password-dialog");
+    if (dialog && !dialog.open) dialog.showModal();
+  }
   queueMicrotask(() => handleSession(session));
+});
+
+$("#password-reset-form").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const button = event.submitter;
+  const password = $("#new-password").value;
+  const confirmation = $("#confirm-password").value;
+  if (password.length < 8) return toast("كلمة المرور لازم تكون 8 أحرف على الأقل.", "error");
+  if (password !== confirmation) return toast("كلمتا المرور غير متطابقتين.", "error");
+  setBusy(button, true);
+  try {
+    const { error } = await supabase.auth.updateUser({ password });
+    if (error) throw error;
+    $("#password-dialog").close();
+    $("#password-reset-form").reset();
+    toast("تم تغيير كلمة المرور بنجاح.");
+  } catch (error) { toast(friendlyError(error), "error"); }
+  finally { setBusy(button, false); }
 });
 
 (async function initialize() {
