@@ -95,7 +95,16 @@
     </section>
   </main>
 
-  <div id="toast-region" class="toast-region" role="status" aria-live="polite"></div>
+  <dialog id="password-dialog" class="password-dialog">
+<form id="password-reset-form" class="form-stack">
+<h2>تعيين كلمة مرور جديدة</h2>
+<p class="muted small">اختَر كلمة مرور قوية من 8 أحرف على الأقل.</p>
+<label>كلمة المرور الجديدة<input id="new-password" type="password" minlength="8" autocomplete="new-password" required></label>
+<label>تأكيد كلمة المرور<input id="confirm-password" type="password" minlength="8" autocomplete="new-password" required></label>
+<button class="button button-primary" type="submit">حفظ كلمة المرور</button>
+</form>
+</dialog>
+<div id="toast-region" class="toast-region" role="status" aria-live="polite"></div>
   <footer class="site-footer"><span>MK SOCIAL</span><span>YOUR DIGITAL UNIVERSE</span><span>نسخة تجريبية أولية</span></footer>
   <script type="module" src="./app.js"></script>
 </body>
