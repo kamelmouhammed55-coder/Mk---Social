@@ -317,8 +317,32 @@ $("#creator-search-form").addEventListener("submit",event=>{
   if(!query)return;
   window.open("https://www.youtube.com/results?search_query="+encodeURIComponent(query),"_blank","noopener,noreferrer");
 });
+
+const curatedCinema = [
+  ...["Inception","Interstellar","The Dark Knight","The Matrix","Dune","Dune: Part Two","Spider-Man: Into the Spider-Verse","The Lord of the Rings: The Fellowship of the Ring","The Shawshank Redemption","Parasite","Gladiator","The Avengers","Coco","Toy Story","The Lion King"].map(title=>({title,type:"movie",kind:"فيلم"})),
+  ...["Breaking Bad","Stranger Things","Game of Thrones","The Last of Us","Wednesday","Sherlock","The Office","Dark","Chernobyl","The Witcher"].map(title=>({title,type:"series",kind:"مسلسل"})),
+  ...["Attack on Titan","Death Note","Fullmetal Alchemist: Brotherhood","One Piece","Naruto Shippuden","Demon Slayer","Jujutsu Kaisen","Frieren: Beyond Journey's End","Hunter x Hunter","Spy x Family","My Hero Academia","Dragon Ball Z"].map(title=>({title,type:"anime",kind:"أنمي"}))
+];
+function renderCuratedCinema(){
+  const host=$("#curated-cinema-grid");if(!host)return;
+  const q=(state.cinemaSearch||"").toLowerCase();
+  const items=curatedCinema.filter(item=>(state.cinemaFilter==="all"||state.cinemaFilter===item.type)&&item.title.toLowerCase().includes(q));
+  host.replaceChildren();
+  if(!items.length){const empty=document.createElement("div");empty.className="empty-state";empty.textContent="ما لقيناش نتائج في الدليل المختار. جرّب كلمة أخرى.";host.append(empty);return}
+  items.forEach(item=>{
+    const card=document.createElement("article");card.className="cinema-card-live curated-card";
+    const info=document.createElement("div");info.className="film-info";
+    const title=safeText(document.createElement("b"),item.title);
+    const meta=safeText(document.createElement("small"),item.kind+" · دليل اكتشاف");
+    const links=document.createElement("div");links.className="curated-links";
+    const watch=document.createElement("a");watch.href="https://www.justwatch.com/dz/search?q="+encodeURIComponent(item.title);watch.target="_blank";watch.rel="noopener noreferrer";watch.textContent="اعرف أين تشاهده ↗";
+    const trailer=document.createElement("a");trailer.href="https://www.youtube.com/results?search_query="+encodeURIComponent(item.title+" official trailer");trailer.target="_blank";trailer.rel="noopener noreferrer";trailer.textContent="التريلر الرسمي ↗";
+    links.append(watch,trailer);info.append(title,meta,links);card.append(info);host.append(card);
+  });
+}
 async function loadCinema(){
   const host=$("#page-cinema");if(!host)return;
+  renderCuratedCinema();
   const {data:films,error}=await supabase.from("cinema_catalog").select("id,title,description,content_type,release_year,genres,poster_url,trailer_url,watch_url,source_name,rights_basis,published").eq("published",true).order("created_at",{ascending:false}).limit(100);
   if(error){console.error("Cinema:",error.message);return}
   const existing=$("#cinema-live-grid");if(existing)existing.remove();
@@ -327,7 +351,7 @@ async function loadCinema(){
   const tools=host.querySelector(".cinema-tools");
   const filtered=(films||[]).filter(film=>(state.cinemaFilter==="all"||film.content_type===state.cinemaFilter)&&((film.title+" "+(film.description||"")+" "+(film.genres||[]).join(" ")).toLowerCase().includes(state.cinemaSearch)));
   if(!films?.length){
-    if(tools)tools.classList.add("hidden");
+    if(tools)tools.classList.remove("hidden");
     if(empty)empty.classList.remove("hidden");
     if(section){const label=section.querySelector("small");const heading=section.querySelector("h2");const status=section.querySelector(".muted");if(label)label.textContent="مخطط له";if(heading)heading.textContent="مكتبة الأفلام";if(status)status.textContent="المرحلة القادمة"}
     return;
