@@ -226,3 +226,7 @@ footer{margin:0 16px;padding:22px 0 16px;font-size:8px}
  .hero-banner{height:220px}
  .brand-word{font-size:15px}
 }
+
+/* Keep the drawer anchored to the phone frame rather than the content grid. */
+.phone-container{position:relative}
+.phone-container .layout{position:static}
