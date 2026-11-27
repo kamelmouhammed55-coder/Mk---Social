@@ -27,7 +27,35 @@ function navigate(page){
   window.scrollTo({top:0,behavior:"smooth"});
 }
 $$("[data-page]").forEach(btn=>btn.addEventListener("click",()=>navigate(btn.dataset.page)));
-$$("[data-go]").forEach(btn=>btn.addEventListener("click",()=>navigate(btn.dataset.go)));
+
+$("[data-go]").forEach(btn=>btn.addEventListener("click",()=>navigate(btn.dataset.go)));
+
+// Phone-style header controls: drawer, quick search and live status clock.
+const appShell=$("#app-shell");
+const menuToggle=$("#menu-toggle");
+menuToggle?.addEventListener("click",()=>{
+  const opened=appShell.classList.toggle("menu-open");
+  menuToggle.setAttribute("aria-expanded",String(opened));
+  menuToggle.setAttribute("aria-label",opened?"إغلاق القائمة":"فتح القائمة");
+  menuToggle.innerHTML=opened?'<i class="fa-solid fa-xmark"></i>':'<i class="fa-solid fa-bars"></i>';
+});
+$("[data-page],[data-go]").forEach(button=>button.addEventListener("click",()=>{
+  appShell?.classList.remove("menu-open");
+  menuToggle?.setAttribute("aria-expanded","false");
+  if(menuToggle)menuToggle.innerHTML='<i class="fa-solid fa-bars"></i>';
+}));
+$("#search-toggle")?.addEventListener("click",()=>{
+  navigate("cinema");
+  window.setTimeout(()=>$("#cinema-search")?.focus(),80);
+});
+function updateAppClock(){
+  const clock=$("#app-clock");
+  if(!clock)return;
+  clock.textContent=new Intl.DateTimeFormat("en-GB",{hour:"2-digit",minute:"2-digit",hour12:false}).format(new Date());
+}
+updateAppClock();
+window.setInterval(updateAppClock,30000);
+
 
 function openAuth(){
   state.authMode="signin";
