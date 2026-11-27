@@ -352,9 +352,6 @@ function renderCuratedCinema(){
     links.append(watch,trailer);info.append(links);card.append(info);host.append(card);
   });
 }
-function youtubeVideoId(raw){
-  try{const u=new URL(raw);if(!["youtube.com","www.youtube.com","m.youtube.com","youtu.be","www.youtu.be","youtube-nocookie.com","www.youtube-nocookie.com"].includes(u.hostname))return null;let id="";if(u.hostname.includes("youtu.be"))id=u.pathname.split("/").filter(Boolean)[0]||"";else if(u.pathname==="/watch")id=u.searchParams.get("v")||"";else if(u.pathname.startsWith("/embed/")||u.pathname.startsWith("/shorts/"))id=u.pathname.split("/")[2]||"";return /^[A-Za-z0-9_-]{11}$/.test(id)?id:null}catch{return null}
-}
 function openCinemaPlayer(raw,title){
   const modal=$("#cinema-player-modal"),stage=$("#cinema-player-stage"),note=$("#cinema-player-note");
   if(!modal||!stage)return;
