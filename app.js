@@ -315,7 +315,7 @@ async function searchChatUsers(term){
     const follow=document.createElement("button");follow.className="small-action chat-start";follow.textContent="متابعة";follow.addEventListener("click",async()=>{const {error}=await supabase.from("follows").insert({follower_id:state.user.id,following_id:profile.id});if(error?.code==="23505"){toast("أنت تتابع هذا العضو بالفعل.");return}if(error){toast(error.message,"error");return}toast("تمت المتابعة.")});row.append(follow);host.append(row);
   });
 }
-let searchDelay;
+
 $("#chat-user-search").addEventListener("input",event=>{clearTimeout(searchDelay);const term=event.target.value;searchDelay=setTimeout(()=>searchChatUsers(term),250)});
 async function startConversation(profile){
   if(!state.user)return;
