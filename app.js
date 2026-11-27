@@ -115,7 +115,7 @@ $("#auth-form").addEventListener("submit",async event=>{
       toast("تم إرسال رمز التحقق إلى بريدك.");
     }else{
       const token=$("#auth-otp").value.trim();
-      if(!/^\\d{6}$/.test(token))throw new Error("أدخل الرمز المكوّن من 6 أرقام.");
+      if(!/^\d{6}$/.test(token))throw new Error("أدخل الرمز المكوّن من 6 أرقام.");
       const {data,error}=await supabase.auth.verifyOtp({email:state.pendingOtpEmail,token,type:"email"});
       if(error)throw error;
       await refreshIdentity(data.user);closeAuth();
