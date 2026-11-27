@@ -8,7 +8,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
 
 const $ = (s, root=document) => root.querySelector(s);
 const $$ = (s, root=document) => [...root.querySelectorAll(s)];
-const state = { user:null, profile:null, isOwner:false, busy:false, otpStep:false, pendingOtpEmail:"", chatId:null, chatChannel:null, notificationChannel:null, posts:[] };
+const state = { user:null, profile:null, isOwner:false, busy:false, authMode:"signin", chatId:null, chatChannel:null, notificationChannel:null, posts:[] };
 let searchDelay;
 
 function toast(message,type="success"){
@@ -30,16 +30,18 @@ $$("[data-page]").forEach(btn=>btn.addEventListener("click",()=>navigate(btn.dat
 $$("[data-go]").forEach(btn=>btn.addEventListener("click",()=>navigate(btn.dataset.go)));
 
 function openAuth(){
-  state.otpStep=false;state.pendingOtpEmail="";
-  $("#auth-heading").textContent="انضم إلى MK Social";
-  $("#auth-description").textContent="أنشئ حسابك وابدأ رحلتك.";
-  $("#auth-email").disabled=false;$("#auth-email").value="kame9865yyy@gmail.com";
-  $("#auth-display-name").disabled=false;$("#auth-display-name").value="";
-  $("#display-name-wrap").classList.remove("hidden");
-  $("#auth-otp").value="";$("#otp-wrap").classList.add("hidden");
-  $("#change-email").classList.add("hidden");
-  $("#auth-submit").textContent="إرسال الرمز";
-  $("#auth-modal").classList.remove("hidden");$("#auth-modal").setAttribute("aria-hidden","false");
+  state.authMode="signin";
+  $("#auth-heading").textContent="تسجيل الدخول";
+  $("#auth-description").textContent="أدخل بريدك الإلكتروني وكلمة المرور للدخول مباشرة.";
+  $("#auth-email").disabled=false;
+  $("#auth-email").value="kame9865yyy@gmail.com";
+  $("#auth-password").value="";
+  $("#auth-password").autocomplete="current-password";
+  $("#auth-submit").textContent="دخول";
+  $("#auth-mode-switch").textContent="ليس لديك حساب؟ أنشئ حساباً";
+  $("#auth-terms").textContent="كلمة المرور لا تقل عن 8 أحرف.";
+  $("#auth-modal").classList.remove("hidden");
+  $("#auth-modal").setAttribute("aria-hidden","false");
 }
 function closeAuth(){$("#auth-modal").classList.add("hidden");$("#auth-modal").setAttribute("aria-hidden","true")}
 $$("[data-close-auth]").forEach(el=>el.addEventListener("click",closeAuth));
@@ -103,45 +105,50 @@ async function refreshIdentity(user){
   if(state.user){loadSocialFeed();loadCinema()}
 }
 $("#auth-form").addEventListener("submit",async event=>{
-  event.preventDefault();if(state.busy)return;
-  const button=$("#auth-submit"),email=state.pendingOtpEmail||$("#auth-email").value.trim().toLowerCase();
+  event.preventDefault();
+  if(state.busy)return;
+  const button=$("#auth-submit");
+  const email=$("#auth-email").value.trim().toLowerCase();
+  const password=$("#auth-password").value;
+  if(!email||!password){toast("أدخل البريد الإلكتروني وكلمة المرور.","error");return}
+  if(password.length<8){toast("كلمة المرور لازم تكون 8 أحرف على الأقل.","error");return}
   state.busy=true;button.disabled=true;button.textContent="لحظة من فضلك...";
   try{
-    if(!state.otpStep){
-      if(!email)throw new Error("اكتب بريدك الإلكتروني أولاً.");
-      const displayName=$("#auth-display-name").value.trim();
-      const {error}=await supabase.auth.signInWithOtp({email,options:{shouldCreateUser:true,data:displayName?{display_name:displayName}:{}}});
+    if(state.authMode==="signup"){
+      const {data,error}=await supabase.auth.signUp({email,password});
       if(error)throw error;
-      state.pendingOtpEmail=email;state.otpStep=true;
-      $("#auth-email").disabled=true;$("#auth-display-name").disabled=true;$("#otp-wrap").classList.remove("hidden");
-      $("#change-email").classList.remove("hidden");
-      $("#auth-description").textContent="أرسلنا رمزاً من 6 أرقام إلى "+email+". أدخله لإكمال الدخول.";
-      $("#auth-submit").textContent="تأكيد الرمز";
-      $("#auth-otp").focus();
-      toast("تم إرسال رمز التحقق إلى بريدك.");
-    }else{
-      const token=$("#auth-otp").value.trim();
-      if(!/^\d{6}$/.test(token))throw new Error("أدخل الرمز المكوّن من 6 أرقام.");
-      const {data,error}=await supabase.auth.verifyOtp({email:state.pendingOtpEmail,token,type:"email"});
-      if(error)throw error;
-      const displayName=$("#auth-display-name").value.trim();
-      if(displayName){
-        const {error:profileError}=await supabase.from("profiles").update({display_name:displayName}).eq("id",data.user.id);
-        if(profileError)console.warn("Could not save display name:",profileError.message);
+      if(!data.session){
+        toast("الحساب تسجّل، لكن Supabase ما زال يطلب تأكيد البريد. لازم تعطّل Confirm email من إعدادات Auth حتى يكون الدخول مباشرة.","error");
+        return;
       }
-      await refreshIdentity(data.user);closeAuth();
-      state.otpStep=false;state.pendingOtpEmail="";
+      await refreshIdentity(data.user);
+      closeAuth();
+      toast("تم إنشاء حسابك والدخول بنجاح.");
+    }else{
+      const {data,error}=await supabase.auth.signInWithPassword({email,password});
+      if(error)throw error;
+      await refreshIdentity(data.user);
+      closeAuth();
       toast("مرحباً بك في MK Universe.");
     }
-  }catch(error){toast(error.message||"تعذر إكمال العملية.","error")}
-  finally{state.busy=false;button.disabled=false;button.textContent=state.otpStep?"تأكيد الرمز":"إرسال الرمز"}
+  }catch(error){
+    const message=error.message||"تعذر إكمال تسجيل الدخول.";
+    toast(message,"error");
+  }finally{
+    state.busy=false;
+    button.disabled=false;
+    button.textContent=state.authMode==="signup"?"إنشاء حساب":"دخول";
+  }
 });
-$("#change-email").addEventListener("click",()=>{
-  state.otpStep=false;state.pendingOtpEmail="";
-  $("#auth-email").disabled=false;$("#auth-display-name").disabled=false;$("#auth-otp").value="";
-  $("#otp-wrap").classList.add("hidden");$("#change-email").classList.add("hidden");
-  $("#auth-description").textContent="اكتب بريدك الإلكتروني ونرسل لك رمزاً من 6 أرقام.";
-  $("#auth-submit").textContent="إرسال الرمز";
+$("#auth-mode-switch").addEventListener("click",()=>{
+  state.authMode=state.authMode==="signin"?"signup":"signin";
+  const signup=state.authMode==="signup";
+  $("#auth-heading").textContent=signup?"إنشاء حساب جديد":"تسجيل الدخول";
+  $("#auth-description").textContent=signup?"أدخل بريدك الإلكتروني وكلمة المرور لإنشاء حسابك.":"أدخل بريدك الإلكتروني وكلمة المرور للدخول مباشرة.";
+  $("#auth-password").value="";
+  $("#auth-password").autocomplete=signup?"new-password":"current-password";
+  $("#auth-submit").textContent=signup?"إنشاء حساب":"دخول";
+  $("#auth-mode-switch").textContent=signup?"لديك حساب؟ سجّل الدخول":"ليس لديك حساب؟ أنشئ حساباً";
 });
 supabase.auth.onAuthStateChange((event,session)=>{
   if(event==="PASSWORD_RECOVERY"){
