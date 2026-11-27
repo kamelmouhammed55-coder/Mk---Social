@@ -293,7 +293,7 @@ async function loadCinema(){
     const link=document.createElement("a");link.href=film.watch_url;link.target="_blank";link.rel="noopener noreferrer";link.textContent="المشاهدة من المصدر الرسمي ↗";
     info.append(title,desc,link);card.append(info);grid.append(card);
   });
-  const section=$("#page-cinema .section-head");section.after(grid);
+  section.after(grid);
 }
 
 async function loadChatList(){
