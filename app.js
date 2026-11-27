@@ -39,7 +39,7 @@ menuToggle?.addEventListener("click",()=>{
   menuToggle.setAttribute("aria-label",opened?"إغلاق القائمة":"فتح القائمة");
   menuToggle.innerHTML=opened?'<i class="fa-solid fa-xmark"></i>':'<i class="fa-solid fa-bars"></i>';
 });
-$("[data-page],[data-go]").forEach(button=>button.addEventListener("click",()=>{
+$$("[data-page],[data-go]").forEach(button=>button.addEventListener("click",()=>{
   appShell?.classList.remove("menu-open");
   menuToggle?.setAttribute("aria-expanded","false");
   if(menuToggle)menuToggle.innerHTML='<i class="fa-solid fa-bars"></i>';
