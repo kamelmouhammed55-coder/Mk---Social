@@ -12,8 +12,10 @@ const state = { user:null, profile:null, isOwner:false, busy:false, otpStep:fals
 let searchDelay;
 
 function toast(message,type="success"){
+  const region=$("#toast-region");
+  region.replaceChildren();
   const el=document.createElement("div");el.className="toast "+type;el.textContent=message;
-  $("#toast-region").append(el);setTimeout(()=>el.remove(),4500);
+  region.append(el);setTimeout(()=>el.remove(),4500);
 }
 function safeText(el,value){el.textContent=value??"";return el}
 function formatDate(value){try{return new Intl.DateTimeFormat("ar",{dateStyle:"medium",timeStyle:"short"}).format(new Date(value))}catch{return ""}}
@@ -105,7 +107,8 @@ $("#auth-form").addEventListener("submit",async event=>{
   try{
     if(!state.otpStep){
       if(!email)throw new Error("اكتب بريدك الإلكتروني أولاً.");
-      const {error}=await supabase.auth.signInWithOtp({email,options:{shouldCreateUser:true}});
+      const displayName=$("#auth-display-name").value.trim();
+      const {error}=await supabase.auth.signInWithOtp({email,options:{shouldCreateUser:true,data:displayName?{display_name:displayName}:{}}});
       if(error)throw error;
       state.pendingOtpEmail=email;state.otpStep=true;
       $("#auth-email").disabled=true;$("#otp-wrap").classList.remove("hidden");
@@ -119,6 +122,11 @@ $("#auth-form").addEventListener("submit",async event=>{
       if(!/^\d{6}$/.test(token))throw new Error("أدخل الرمز المكوّن من 6 أرقام.");
       const {data,error}=await supabase.auth.verifyOtp({email:state.pendingOtpEmail,token,type:"email"});
       if(error)throw error;
+      const displayName=$("#auth-display-name").value.trim();
+      if(displayName){
+        const {error:profileError}=await supabase.from("profiles").update({display_name:displayName}).eq("id",data.user.id);
+        if(profileError)console.warn("Could not save display name:",profileError.message);
+      }
       await refreshIdentity(data.user);closeAuth();
       state.otpStep=false;state.pendingOtpEmail="";
       toast("مرحباً بك في MK Universe.");
