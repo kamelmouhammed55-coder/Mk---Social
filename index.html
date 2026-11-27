@@ -9,13 +9,21 @@
   <title>MK Universe — Your Digital Universe</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">\n  <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
   <div class="glow glow-a"></div><div class="glow glow-b"></div>
-  <header class="topbar">
-    <a class="brand" href="#" aria-label="MK Universe"><span class="brand-mark"><span class="brand-crown">♛</span>MK</span><span><b>MK UNIVERSE</b><small>YOUR DIGITAL UNIVERSE</small></span></a>
-    <div class="top-actions"><span class="demo-pill"><i></i> عالمك الرقمي</span><button id="notifications-button" class="icon-action hidden" type="button" aria-label="الإشعارات">♧<span id="notification-count" class="notification-count hidden">0</span></button><button id="auth-button" class="auth-open">دخول / إنشاء حساب</button><button id="logout-button" class="auth-open hidden">خروج</button></div>
+  <div class="phone-container" id="app-shell">
+  <div class="status-bar"><span id="app-clock">MK UNIVERSE</span><div class="status-icons" aria-hidden="true"><i class="fa-solid fa-signal"></i><i class="fa-solid fa-wifi"></i><i class="fa-solid fa-battery-full"></i></div></div>
+  <header class="topbar top-nav">
+    <button id="menu-toggle" class="menu-icon" type="button" aria-label="فتح القائمة" aria-expanded="false"><i class="fa-solid fa-bars"></i></button>
+    <a class="brand" href="#" aria-label="MK Universe"><span class="brand-mark">MK</span><span class="brand-word">UNIVERSE</span><span class="brand-crown" aria-hidden="true">♛</span></a>
+    <div class="top-actions">
+      <button id="search-toggle" class="icon-action search-icon" type="button" aria-label="البحث"><i class="fa-solid fa-magnifying-glass"></i></button>
+      <button id="notifications-button" class="icon-action hidden" type="button" aria-label="الإشعارات"><i class="fa-regular fa-bell"></i><span id="notification-count" class="notification-count hidden">0</span></button>
+      <button id="auth-button" class="auth-open" type="button">دخول</button>
+      <button id="logout-button" class="auth-open hidden" type="button">خروج</button>
+    </div>
   </header>
   <main class="layout">
     <aside class="sidebar">
@@ -33,18 +41,36 @@
     </aside>
     <section class="content">
       <section class="page active" id="page-home">
-        <div class="hero">
-          <div class="hero-copy"><span class="eyebrow"><i></i> مرحباً بك في عالم جديد</span><h1>عالمك.<br><span>بلا حدود.</span></h1><p>اكتشف عوالم السينما، شاهد صناع المحتوى، وشارك لحظاتك مع مجتمع MK — تجربة واحدة تجمع اهتماماتك.</p><div class="hero-buttons"><button class="primary" data-go="social">اكتشف المنشورات <b>←</b></button><button class="secondary" data-go="cinema">استكشف السينما</button></div></div>
-          <div class="hero-art"><div class="planet planet-one"></div><div class="planet planet-two"></div><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="art-logo">MK<span>UNIVERSE</span></div><div class="art-caption">YOUR WORLD<br>YOUR STORY</div></div>
+        <section class="hero-banner" aria-label="مرحباً بك في MK Universe">
+          <div class="hero-glow" aria-hidden="true"></div>
+          <div class="hero-content">
+            <span class="hero-kicker">YOUR DIGITAL UNIVERSE</span>
+            <h1>كل عالمك في مكان واحد</h1>
+            <p>أفلام • مسلسلات • أنمي • محتوى مميز</p>
+            <div class="hero-actions">
+              <button class="hero-action-primary" type="button" data-go="cinema">اكتشف الآن <i class="fa-solid fa-arrow-left"></i></button>
+              <button class="hero-action-quiet" type="button" data-go="creators">شاهد المبدعين</button>
+            </div>
+          </div>
+          <div class="dots" aria-hidden="true"><span></span><span class="active"></span><span></span></div>
+          <div class="hero-orbit orbit-a" aria-hidden="true"></div><div class="hero-orbit orbit-b" aria-hidden="true"></div>
+        </section>
+        <div class="home-section-heading"><div><small>اكتشف عالمك</small><h2>كل ما تحب، في مكان واحد</h2></div><span>MK ✦</span></div>
+        <div class="grid-menu">
+          <button class="menu-card" type="button" data-go="cinema">
+            <span class="icon-circle"><i class="fa-solid fa-film"></i></span><h3>MK CINEMA</h3><p>اكتشف عالم الأفلام <i class="fa-solid fa-circle-chevron-left"></i></p>
+          </button>
+          <button class="menu-card" type="button" data-go="creators">
+            <span class="icon-circle"><i class="fa-brands fa-youtube"></i></span><h3>MK CREATORS</h3><p>تابع أفضل اليوتيوبرز <i class="fa-solid fa-circle-chevron-left"></i></p>
+          </button>
+          <button class="menu-card" type="button" data-go="social">
+            <span class="icon-circle"><i class="fa-solid fa-users"></i></span><h3>MK SOCIAL</h3><p>شارك وتواصل <i class="fa-solid fa-circle-chevron-left"></i></p>
+          </button>
+          <button class="menu-card" type="button" data-go="chat">
+            <span class="icon-circle"><i class="fa-solid fa-comments"></i></span><h3>MK CHAT</h3><p>تواصل مع مجتمعك <i class="fa-solid fa-circle-chevron-left"></i></p>
+          </button>
         </div>
-        <div class="section-head"><div><small>اكتشف عالمك</small><h2>كل ما تحب، في مكان واحد</h2></div><span class="live-dot">MK UNIVERSE</span></div>
-        <div class="module-grid">
-          <button class="module-card cinema-card" data-go="cinema"><span class="module-icon">▣</span><small>MK CINEMA</small><b>شاهد واكتشف</b><p>أفلام ومسلسلات ومكتبة مشاهدة.</p><span class="card-arrow">←</span></button>
-          <button class="module-card creators-card" data-go="creators"><span class="module-icon">▶</span><small>MK CREATORS</small><b>شاهد صناع المحتوى</b><p>فيديوهات من قنوات يوتيوب الرسمية.</p><span class="card-arrow">←</span></button>
-          <button class="module-card social-card" data-go="social"><span class="module-icon">◉</span><small>MK SOCIAL</small><b>شارك لحظاتك</b><p>منشورات وصور وفيديوهات وتفاعل.</p><span class="card-arrow">←</span></button>
-          <button class="module-card chat-card" data-go="chat"><span class="module-icon">▤</span><small>MK CHAT</small><b>ابقَ على تواصل</b><p>محادثات خاصة ومجموعات.</p><span class="card-arrow">←</span></button>
-        </div>
-        <div class="section-head"><div><small>من المجتمع</small><h2>آخر المنشورات</h2></div><button class="text-button" data-go="social">عرض الكل ←</button></div>
+        <div class="home-feed-heading"><div><small>من المجتمع</small><h2>آخر المنشورات</h2></div><button type="button" data-go="social">عرض الكل ←</button></div>
         <div id="home-feed" class="feed-list"></div>
       </section>
       <section class="page" id="page-social">
@@ -147,8 +173,14 @@
       <footer>© 2026 MK UNIVERSE <span>YOUR DIGITAL UNIVERSE</span></footer>
     </section>
   </main>
-  <nav class="mobile-nav" id="mobile-nav"><button class="active" data-page="home">⌂<small>الرئيسية</small></button><button data-page="cinema">▣<small>السينما</small></button>
-    <button data-page="creators">▶<small>المبدعون</small></button><button data-page="social">◉<small>المنشورات</small></button><button data-page="chat">▤<small>الدردشة</small></button><button data-page="profile">◎<small>حسابي</small></button><button id="admin-mobile-nav" class="hidden" data-page="admin">🔐<small>الخزانة</small></button></nav>
+  <nav class="mobile-nav" id="mobile-nav" aria-label="التنقل الرئيسي">
+    <button class="active" data-page="home" aria-label="الرئيسية"><i class="fa-solid fa-house"></i><small>الرئيسية</small></button>
+    <button data-page="cinema" aria-label="السينما"><i class="fa-solid fa-clapperboard"></i><small>سينما</small></button>
+    <button data-page="social" aria-label="المجتمع"><i class="fa-solid fa-users"></i><small>مجتمع</small></button>
+    <button data-page="chat" aria-label="الدردشة"><i class="fa-solid fa-comment-dots"></i><small>دردشة</small></button>
+    <button id="admin-mobile-nav" class="hidden" data-page="admin" aria-label="المالك"><i class="fa-solid fa-crown"></i><small>المالك</small></button>
+  </nav>
+  </div>
   <section id="cinema-player-modal" class="cinema-player-modal hidden" aria-hidden="true" role="dialog" aria-modal="true" aria-label="مشغل MK Cinema">
     <div class="cinema-player-backdrop" data-close-player></div>
     <div class="cinema-player-dialog">
