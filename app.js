@@ -419,11 +419,11 @@ $("#refresh-feed").addEventListener("click", async () => {
 
 $("#search-form").addEventListener("submit", async (event) => {
   event.preventDefault();
-  const term = $("#search-input").value.trim().replace(/^@/, "");
+  const term = $("#search-input").value.trim().replace(/^@/, "").toLowerCase();
   const resultsBox = $("#search-results");
   resultsBox.replaceChildren();
-  if (term.length < 2) {
-    toast("اكتب حرفين على الأقل للبحث.", "error");
+  if (!/^[a-z0-9_]{2,24}$/.test(term)) {
+    toast("استعمل حروفاً إنجليزية أو أرقاماً أو _ (من 2 إلى 24).", "error");
     return;
   }
   try {
