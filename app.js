@@ -1,7 +1,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.89.0";
 
 const SUPABASE_URL = "https://zdiexngxbcummxhnuacr.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_kGDOwsesrJqXQ1rrCiBZ7Q_xSXp5Hkh";
+const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpkaWV4bmd4YmN1bW14aG51YWNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTU3OTA0MzgsImV4cCI6MjExMTM2NjQzOH0.8vkK9fQAmLKZje_KSFJKTBh-Q4lm9izl9insjRIhvNs";
 const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
   auth: { autoRefreshToken: true, persistSession: true, detectSessionInUrl: true }
 });
