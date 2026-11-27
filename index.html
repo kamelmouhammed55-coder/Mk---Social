@@ -27,7 +27,7 @@
         <button class="nav-item" data-page="social"><span>◉</span> المنشورات</button>
         <button class="nav-item" data-page="chat"><span>▤</span> الدردشة <em>قريباً</em></button>
         <button class="nav-item" data-page="profile"><span>◎</span> ملفي الشخصي</button>
-        <button id="admin-nav" class="nav-item hidden" data-page="admin"><span>⚙</span> إدارة المنصة</button>
+        <button id="admin-nav" class="nav-item hidden" data-page="admin"><span>🔐</span> خزانة المالك</button>
       </nav>
       <div class="sidebar-bottom"><div class="mini-orbit">✦</div><b>MK Universe</b><small>منصة واحدة. عوالم متعددة.</small></div>
     </aside>
@@ -121,7 +121,7 @@
         <form id="profile-form" class="profile-edit"><h3>تعديل الملف الشخصي</h3><label>الاسم الظاهر<input id="profile-name" maxlength="40" placeholder="اسمك"></label><label>اسم المستخدم<input id="profile-username" maxlength="24" placeholder="username"></label><label>صورة الملف الشخصي<input id="profile-avatar-file" type="file" accept="image/jpeg,image/png,image/webp,image/gif"></label><label>نبذة عنك<textarea id="profile-bio" maxlength="160" rows="3" placeholder="اكتب نبذة قصيرة"></textarea></label><button class="primary" type="submit">حفظ التغييرات</button></form><div class="notice"><b>MK ID</b><p>حساب واحد للوصول إلى السينما والمنشورات والدردشة، دون إنشاء حساب منفصل لكل قسم.</p></div>
       </section>
       <section class="page" id="page-admin">
-        <div class="page-title"><div><small>MK AUDIENCE · OWNER CONSOLE</small><h1>إدارة المنصة</h1><p>لوحة المالك — الأدوات الإدارية محمية على مستوى قاعدة البيانات والخادم.</p></div><span class="page-symbol">⚙</span></div>
+        <div class="page-title"><div><small>MK UNIVERSE · PRIVATE OWNER VAULT</small><h1>خزانة المالك</h1><p>مساحة خاصة بحساب المالك فقط. لا تظهر للأعضاء، وكل إجراء إداري يتحقق من صلاحياته في قاعدة البيانات.</p></div><span class="page-symbol">⚙</span></div>
         <div id="admin-stats" class="admin-stats"></div>
         <div class="admin-section"><div class="section-head compact"><div><small>المستخدمون</small><h2>إدارة الأعضاء والحظر</h2></div><button id="refresh-users" class="text-button">تحديث</button></div><input id="admin-user-search" class="admin-search" type="search" placeholder="ابحث بالبريد أو الاسم أو اسم المستخدم"><div id="admin-users" class="admin-list"></div></div>
         <div class="admin-section"><div class="section-head compact"><div><small>المراجعة والإشراف</small><h2>البلاغات</h2></div><button id="refresh-reports" class="text-button">تحديث</button></div><div id="admin-reports" class="admin-list"></div></div>
@@ -147,7 +147,7 @@
     </section>
   </main>
   <nav class="mobile-nav" id="mobile-nav"><button class="active" data-page="home">⌂<small>الرئيسية</small></button><button data-page="cinema">▣<small>السينما</small></button>
-    <button data-page="creators">▶<small>المبدعون</small></button><button data-page="social">◉<small>المنشورات</small></button><button data-page="chat">▤<small>الدردشة</small></button><button data-page="profile">◎<small>حسابي</small></button><button id="admin-mobile-nav" class="hidden" data-page="admin">⚙<small>الإدارة</small></button></nav>
+    <button data-page="creators">▶<small>المبدعون</small></button><button data-page="social">◉<small>المنشورات</small></button><button data-page="chat">▤<small>الدردشة</small></button><button data-page="profile">◎<small>حسابي</small></button><button id="admin-mobile-nav" class="hidden" data-page="admin">🔐<small>الخزانة</small></button></nav>
   <div id="notifications-panel" class="notifications-panel hidden"><div class="notifications-head"><b>الإشعارات</b><button id="notifications-close" type="button">×</button></div><div id="notifications-list"></div></div>
   <section id="auth-modal" class="modal hidden" aria-hidden="true">
     <div class="modal-backdrop" data-close-auth></div>
