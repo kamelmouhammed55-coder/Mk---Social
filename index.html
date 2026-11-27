@@ -95,12 +95,14 @@
     <div class="modal-backdrop" data-close-auth></div>
     <div class="auth-dialog" role="dialog" aria-modal="true" aria-labelledby="auth-heading">
       <button class="modal-close" type="button" data-close-auth aria-label="إغلاق">×</button>
+      <div class="auth-intro"><small>صحتك. مجتمعك.</small><h2>تواصل، شارك أفكارك، واكتشف أشخاصاً يشاركونك الاهتمامات.</h2><div class="auth-features"><span>مجتمع واحد</span><span>محتوى من اختيارك</span><span>تحكم في حسابك</span></div></div>
       <span class="mini-mark">MK</span><small class="auth-kicker">MK ID · حساب واحد لكل عوالمك</small>
-      <h2 id="auth-heading">انضم إلى MK Universe</h2><p id="auth-description">أنشئ حسابك وابدأ رحلتك.</p>
+      <h2 id="auth-heading">انضم إلى MK Social</h2><p id="auth-description">أنشئ حسابك وابدأ رحلتك.</p>
       <form id="auth-form">
-        <label>البريد الإلكتروني<input id="auth-email" type="email" autocomplete="email" placeholder="name@example.com" required></label>
+        <label>البريد الإلكتروني<input id="auth-email" type="email" autocomplete="email" placeholder="name@example.com" value="kame9865yyy@gmail.com" required></label>
+        <label id="display-name-wrap">الاسم الظاهر<input id="auth-display-name" type="text" autocomplete="name" maxlength="40" placeholder="اسمك الظاهر"></label>
         <label id="otp-wrap" class="hidden">رمز التحقق (6 أرقام)<input id="auth-otp" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" placeholder="000000"></label>
-        <button id="auth-submit" class="primary auth-submit" type="submit">إرسال الرمز</button>
+        <button id="auth-submit" class="primary auth-submit" type="submit">إنشاء الحساب / إرسال الرمز</button>
       </form>
       <button id="change-email" class="auth-switch hidden" type="button">تغيير البريد الإلكتروني</button>
       <p class="auth-terms">رمز مؤقت يُرسل إلى بريدك الإلكتروني، ولا تحتاج إلى كلمة مرور.</p>
