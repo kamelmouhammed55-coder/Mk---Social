@@ -13,7 +13,7 @@
   <div class="glow glow-a"></div><div class="glow glow-b"></div>
   <header class="topbar">
     <a class="brand" href="#" aria-label="MK Universe"><span class="brand-mark">MK</span><span><b>MK UNIVERSE</b><small>YOUR DIGITAL UNIVERSE</small></span></a>
-    <div class="top-actions"><span class="demo-pill"><i></i> معاينة أولية</span><button class="avatar" aria-label="الملف الشخصي">MK</button></div>
+    <div class="top-actions"><span class="demo-pill"><i></i> معاينة أولية</span><button id="auth-button" class="auth-open">دخول / إنشاء حساب</button><button id="logout-button" class="auth-open hidden">خروج</button></div>
   </header>
   <main class="layout">
     <aside class="sidebar">
@@ -66,5 +66,22 @@
     </section>
   </main>
   <nav class="mobile-nav" id="mobile-nav"><button class="active" data-page="home">⌂<small>الرئيسية</small></button><button data-page="cinema">▣<small>السينما</small></button><button data-page="social">◉<small>المنشورات</small></button><button data-page="chat">▤<small>الدردشة</small></button><button data-page="profile">◎<small>حسابي</small></button></nav>
+  <section id="auth-modal" class="modal hidden" aria-hidden="true">
+    <div class="modal-backdrop" data-close-auth></div>
+    <div class="auth-dialog" role="dialog" aria-modal="true" aria-labelledby="auth-heading">
+      <button class="modal-close" type="button" data-close-auth aria-label="إغلاق">×</button>
+      <span class="mini-mark">MK</span><small class="auth-kicker">MK ID · حساب واحد لكل عوالمك</small>
+      <h2 id="auth-heading">انضم إلى MK Universe</h2><p id="auth-description">أنشئ حسابك وابدأ رحلتك.</p>
+      <form id="auth-form">
+        <label id="display-name-wrap">الاسم الظاهر<input id="auth-name" type="text" maxlength="40" autocomplete="name" placeholder="اسمك" required></label>
+        <label>البريد الإلكتروني<input id="auth-email" type="email" autocomplete="email" placeholder="name@example.com" required></label>
+        <label>كلمة المرور<input id="auth-password" type="password" minlength="8" autocomplete="current-password" placeholder="8 أحرف على الأقل" required></label>
+        <button id="auth-submit" class="primary auth-submit" type="submit">إنشاء الحساب</button>
+      </form>
+      <button id="auth-switch" class="auth-switch" type="button">لديك حساب؟ سجل الدخول</button>
+      <button id="forgot-password" class="auth-switch" type="button">نسيت كلمة المرور؟</button>
+      <p class="auth-terms">بالمتابعة، أنت توافق على قواعد المجتمع وسياسة الاستخدام.</p>
+    </div>
+  </section>
   <div id="toast-region" aria-live="polite"></div><script type="module" src="./app.js"></script>
 </body></html>
