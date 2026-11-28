@@ -1,7 +1,7 @@
 name: Validate MK Universe
 on:
   push:
-    branches: [main, mk-universe-rebuild]
+    branches: [main, mk-universe-rebuild, mk-universe-v2]
   pull_request:
     branches: [main]
 jobs:
