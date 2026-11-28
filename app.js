@@ -62,7 +62,7 @@ function openAuth(){
   $("#auth-heading").textContent="تسجيل الدخول";
   $("#auth-description").textContent="أدخل بريدك الإلكتروني وكلمة المرور للدخول مباشرة.";
   $("#auth-email").disabled=false;
-  $("#auth-email").value="kame9865yyy@gmail.com";
+  $("#auth-email").value="";
   $("#auth-password").value="";
   $("#auth-password").autocomplete="current-password";
   $("#auth-submit").textContent="دخول";
