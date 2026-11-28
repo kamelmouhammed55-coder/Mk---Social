@@ -578,7 +578,7 @@ async function loadAdminUsers(){
     const del=document.createElement("button");del.className="small-action danger";del.textContent="حذف الحساب";
     del.addEventListener("click",async()=>{
       if(prompt("هذا الإجراء نهائي ويحذف الحساب ومحتواه. اكتب DELETE للتأكيد:")!=="DELETE")return;
-      try{await callOwnerAction("delete",{user_id:user.user_id});toast("تم حذف الحساب.");await loadAdminDashboard()}
+      try{const result=await callOwnerAction("delete",{user_id:user.user_id});toast(result?.cleanup_pending?`تم حذف الحساب، لكن بقي ${result.cleanup_failed_files} ملفاً يحتاج تنظيفاً.`:`تم حذف الحساب وتنظيف ${result?.removed_files??0} ملف.`);await loadAdminDashboard()}
       catch(error){toast(error.message||"تعذر حذف الحساب.","error")}
     });
     const editProfile=document.createElement("button");editProfile.className="small-action";editProfile.textContent="تعديل الملف";
