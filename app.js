@@ -146,7 +146,7 @@ $("#auth-form").addEventListener("submit",async event=>{
       const {data,error}=await supabase.auth.signUp({email,password});
       if(error)throw error;
       if(!data.session){
-        toast("الحساب تسجّل، لكن Supabase ما زال يطلب تأكيد البريد. لازم تعطّل Confirm email من إعدادات Auth حتى يكون الدخول مباشرة.","error");
+        toast("تم إنشاء الحساب. افتح بريدك الإلكتروني واضغط رابط التأكيد، ثم ارجع لتسجيل الدخول.","success");
         return;
       }
       await refreshIdentity(data.user);
