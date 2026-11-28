@@ -11,7 +11,7 @@ assert.doesNotMatch(app, /#auth-email"\)\.value\s*=\s*["\'][^"\']+@/i, "auth for
 assert.ok(html.includes('id="auth-password"'), "password input must be present");
 assert.ok(html.includes('id="auth-mode-switch"'), "sign-in/sign-up switch must be present");
 assert.match(app, /if\(state\.user\)startNotifications\(\)/, "notifications must start after identity refresh");
-assert.match(app, /if\(!films\?\.length\)/, "cinema empty state must be handled");
+assert.match(app, /if\(!filtered\.length\)/, "cinema empty state must be handled");
 assert.doesNotMatch(html, /id="post-content"[^>]*required/, "media-only posts must be allowed");
 for (const id of ["auth-form", "auth-email", "auth-password", "auth-mode-switch", "post-form", "post-content", "post-media", "profile-form", "admin-film-form", "chat-panel"]) {
   assert.ok(html.includes(`id="${id}"`), `missing required HTML element: ${id}`);
