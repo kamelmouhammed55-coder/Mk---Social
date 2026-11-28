@@ -8,6 +8,8 @@ assert.match(app, /signInWithPassword\(/, "email and password sign-in must be im
 assert.match(app, /auth\.signUp\(/, "email and password sign-up must be implemented");
 assert.doesNotMatch(app, /signInWithOtp\(|verifyOtp\(/, "OTP authentication must be removed");
 assert.doesNotMatch(app, /#auth-email"\)\.value\s*=\s*["\'][^"\']+@/i, "auth form must not expose a prefilled email address");
+assert.doesNotMatch(app, /تعطّل Confirm email|disable Confirm email/i, "public sign-up must not recommend disabling email confirmation");
+assert.match(app, /اضغط رابط التأكيد/, "sign-up must guide users to confirm their email");
 assert.ok(html.includes('id="auth-password"'), "password input must be present");
 assert.ok(html.includes('id="auth-mode-switch"'), "sign-in/sign-up switch must be present");
 assert.match(app, /if\(state\.user\)startNotifications\(\)/, "notifications must start after identity refresh");
