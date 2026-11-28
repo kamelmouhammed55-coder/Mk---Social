@@ -1,7 +1,5 @@
 name: Deploy MK Universe to GitHub Pages
 on:
-  push:
-    branches: [mk-universe-v2]
   workflow_dispatch:
 permissions:
   contents: read
